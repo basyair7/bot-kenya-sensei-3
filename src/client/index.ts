@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits } from "discord.js"
+import { Client, GatewayIntentBits, Partials } from "discord.js"
 import { registerEvents } from '../utils'
 import events from '../events'
 import keys from "../keys"
@@ -10,7 +10,9 @@ const client = new Client({
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildIntegrations,
         GatewayIntentBits.GuildVoiceStates,
-    ]
+        GatewayIntentBits.MessageContent,
+    ],
+    partials: [Partials.Channel]
 });
 
 registerEvents(client, events)

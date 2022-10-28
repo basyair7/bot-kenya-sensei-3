@@ -1,4 +1,8 @@
-import { SlashCommandBuilder } from 'discord.js'
+import { 
+    SlashCommandBuilder, 
+    ButtonStyle,
+    ButtonBuilder
+} from 'discord.js'
 import { command } from '../../utils'
 
 const meta = new SlashCommandBuilder()
@@ -13,11 +17,25 @@ const meta = new SlashCommandBuilder()
             .setRequired(false)
     )
 
-export default command(meta, ({ interaction }) => {
-    const message = interaction.options.getString('message')
+export default command ( meta, async ({ interaction, client }) => {
+    // const message = await interaction.options.getString('message')
 
-    return interaction.reply({
-        ephemeral: true,
-        content: message ?? 'Pong! 🏓'
-    })
+    // var ping = Date.now() - message.createdTimestamp;
+
+    const message = await interaction.reply({
+        content: 'Pong!',
+        fetchReply: true
+    });
+
+    return interaction.editReply({
+        content: `:ping_pong: Pong!\nBot Latency: \`${message.createdTimestamp - interaction.createdTimestamp}ms\`, Websocket Latency: \`${client.ws.ping}ms\``
+    }).then(
+        embedMessage => {
+            const button = new ButtonBuilder()
+                .setCustomId('primary')
+                .setLabel('Remove')
+                .setStyle(ButtonStyle.Primary)
+                .setDisabled(true);
+        }
+    )
 })
