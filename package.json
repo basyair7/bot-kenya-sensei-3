@@ -7,8 +7,8 @@
         "build": "tsc",
         "start": "node .",
         "dev": "nodemon --config nodemon.js src/index.ts",
-        "deploy": "",
-        "deploy-prod": ""
+        "deploy": "cross-env IS_SCRIPT=true ts-node src/scripts/deploy",
+        "deploy-prod": "cross-env NODE_ENV=production npm run deploy"
     },
     "keywords": [],
     "author": "",

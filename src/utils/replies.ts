@@ -23,7 +23,6 @@ export const Reply = {
 export const EditReply = {
     error(msg: string): WebhookEditMessageOptions {
         return {
-            ephemeral: true,
             embeds: [{
                 color: Colors.error,
                 description: msg
