@@ -8,7 +8,7 @@ export function event<T extends EventKeys>(id: T, exec: EventExec<T>): Event<T> 
     }
 }
 
-export function registerEvent(client: Client, events: Event<any>[]): void {
+export function registerEvents(client: Client, events: Event<any>[]): void {
     for (const event of events) 
     {
         client.on(event.id, async (...args) => {

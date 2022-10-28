@@ -1,5 +1,5 @@
 import { Client, GatewayIntentBits } from "discord.js"
-import { registerEvent } from '../utils'
+import { registerEvents } from '../utils'
 import events from '../events'
 import keys from "../keys"
 
@@ -13,7 +13,7 @@ const client = new Client({
     ]
 });
 
-registerEvent(client, events)
+registerEvents(client, events)
 
 client.login(keys.clientToken).catch((err) => {
         console.log(`Bot Error : ${err}`);
