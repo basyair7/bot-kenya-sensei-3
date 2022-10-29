@@ -1,7 +1,6 @@
 import { 
-    SlashCommandBuilder, 
-    ButtonStyle,
-    ButtonBuilder
+    SlashCommandBuilder,
+    ActionRowBuilder, ButtonBuilder, ButtonStyle
 } from 'discord.js'
 import { command } from '../../utils'
 
@@ -17,7 +16,7 @@ const meta = new SlashCommandBuilder()
             .setRequired(false)
     )
 
-export default command ( meta, async ({ interaction, client }) => {
+export default command(meta, async ({ interaction, client }) => {
     // const message = await interaction.options.getString('message')
 
     // var ping = Date.now() - message.createdTimestamp;
@@ -27,15 +26,23 @@ export default command ( meta, async ({ interaction, client }) => {
         fetchReply: true
     });
 
-    return interaction.editReply({
-        content: `:ping_pong: Pong!\nBot Latency: \`${message.createdTimestamp - interaction.createdTimestamp}ms\`, Websocket Latency: \`${client.ws.ping}ms\``
-    }).then(
-        embedMessage => {
-            const button = new ButtonBuilder()
-                .setCustomId('primary')
-                .setLabel('Remove')
-                .setStyle(ButtonStyle.Primary)
-                .setDisabled(true);
-        }
-    )
+    const row = new ActionRowBuilder<ButtonBuilder>()
+        .setComponents(
+            new ButtonBuilder()
+                .setCustomId('delete')
+                .setLabel('Delete')
+                .setStyle(ButtonStyle.Danger)
+                // .setDisabled(true)
+        );
+
+    if(interaction.isButton()){
+        console.log("ehhl")
+    }
+    await interaction.editReply({
+        // fetchReply: true,
+        content: `:ping_pong: Pong!\nBot Latency: \`${message.createdTimestamp - interaction.createdTimestamp}ms\`, Websocket Latency: \`${client.ws.ping}ms\``,
+        components: [
+            row
+        ]
+    })
 })

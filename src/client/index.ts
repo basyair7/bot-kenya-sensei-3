@@ -18,6 +18,6 @@ const client = new Client({
 registerEvents(client, events)
 
 client.login(keys.clientToken).catch((err) => {
-        console.log(`Bot Error : ${err}`);
-        process.exit(1);
-    })
+    console.log(`Bot Error : ${err}`);
+    process.exit(1);
+})
