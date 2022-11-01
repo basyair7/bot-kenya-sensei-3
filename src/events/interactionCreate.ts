@@ -5,7 +5,7 @@ import { EditReply, event, Reply } from '../utils'
 const allCommands = commands.map(({ commands }) => commands).flat()
 const allCommandsMap = new Map<string, Command>(
     allCommands.map((c) => [c.meta.name, c])
-)
+);
 
 export default event('interactionCreate', async (
     {
@@ -42,18 +42,10 @@ export default event('interactionCreate', async (
             )
         }
     }
-    // else if(interaction.isButton())
-    // {
-    //     const buttons = client;
-    //     const { customId } = interaction;
-    //     const button = buttons.get<unknown, any>(customId);
-        
-    //     if(!buttons) return new Error('There is not code for this button!');
-
-    //     try{
-    //         await button.exec(interaction, client)
-    //     } catch (e) {
-    //         console.error(e);
-    //     }
-    // }
+    else if (interaction.isButton())
+    {
+        if(interaction.customId === 'delete'){
+            return await interaction.message.delete();
+        }
+    }
 })

@@ -1,20 +1,22 @@
-import { 
+import {
     SlashCommandBuilder,
-    ActionRowBuilder, ButtonBuilder, ButtonStyle
+    ActionRowBuilder, 
+    ButtonBuilder, 
+    ButtonStyle
 } from 'discord.js'
 import { command } from '../../utils'
 
 const meta = new SlashCommandBuilder()
     .setName('ping')
     .setDescription('Ping the bot for a response.')
-    .addStringOption((option) =>
-        option
-            .setName('message')
-            .setDescription('Provide the bot a message to respond with.')
-            .setMinLength(1)
-            .setMaxLength(2000)
-            .setRequired(false)
-    )
+    // .addStringOption((option) =>
+    //     option
+    //         .setName('message')
+    //         .setDescription('Provide the bot a message to respond with.')
+    //         .setMinLength(1)
+    //         .setMaxLength(2000)
+    //         .setRequired(false)
+    // )
 
 export default command(meta, async ({ interaction, client }) => {
     // const message = await interaction.options.getString('message')
@@ -26,23 +28,20 @@ export default command(meta, async ({ interaction, client }) => {
         fetchReply: true
     });
 
-    const row = new ActionRowBuilder<ButtonBuilder>()
+    const buttonDelete = new ActionRowBuilder<ButtonBuilder>()
         .setComponents(
             new ButtonBuilder()
                 .setCustomId('delete')
                 .setLabel('Delete')
                 .setStyle(ButtonStyle.Danger)
-                // .setDisabled(true)
+            // .setDisabled(true)
         );
 
-    if(interaction.isButton()){
-        console.log("ehhl")
-    }
-    await interaction.editReply({
+    return interaction.editReply({
         // fetchReply: true,
         content: `:ping_pong: Pong!\nBot Latency: \`${message.createdTimestamp - interaction.createdTimestamp}ms\`, Websocket Latency: \`${client.ws.ping}ms\``,
         components: [
-            row
+            buttonDelete
         ]
     })
 })

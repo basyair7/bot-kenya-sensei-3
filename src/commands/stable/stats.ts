@@ -1,6 +1,9 @@
 import {
     SlashCommandBuilder,
-    EmbedBuilder
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle
 } from 'discord.js'
 import { command } from '../../utils'
 
@@ -28,11 +31,23 @@ export default command(meta, async ({ interaction, client }) => {
         .setFooter({
             text: "Powered By Replit.com"
         });
+    
+    const buttonDelete = new ActionRowBuilder<ButtonBuilder>()
+        .setComponents(
+            new ButtonBuilder()
+                .setCustomId('delete')
+                .setLabel('Delete')
+                .setStyle(ButtonStyle.Danger)
+    );
 
-    return interaction.reply({
-        fetchReply: true,
+    await interaction.reply({
+        // fetchReply: true,
         embeds: [
             message
+        ],
+        components:[
+            buttonDelete
         ]
     });
+    
 })

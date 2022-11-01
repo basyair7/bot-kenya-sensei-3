@@ -1,7 +1,7 @@
 import { Client, GatewayIntentBits, Partials } from "discord.js"
 import { registerEvents } from '../utils'
 import events from '../events'
-import keys from "../keys"
+import keys from "../keys";
 
 
 const client = new Client({

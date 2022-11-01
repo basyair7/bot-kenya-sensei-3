@@ -1,20 +1,15 @@
 import {
     SlashCommandBuilder,
-    EmbedBuilder
+    EmbedBuilder,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle
 } from 'discord.js'
 import { command } from '../../utils'
 
 const meta = new SlashCommandBuilder()
     .setName('stats')
     .setDescription('Bot Staticstic')
-    // .addStringOption((option) =>
-    //     option
-    //         .setName('message')
-    //         .setDescription('Provide the bot statics')
-    //         .setMinLength(1)
-    //         .setMaxLength(2000)
-    //         .setRequired(false)
-    // )
 
 export default command(meta, async ({ interaction, client }) => {
     const { platform, arch, cpus } = require('os');
@@ -36,11 +31,23 @@ export default command(meta, async ({ interaction, client }) => {
         .setFooter({
             text: "Powered By Replit.com"
         });
+    
+    const buttonDelete = new ActionRowBuilder<ButtonBuilder>()
+        .setComponents(
+            new ButtonBuilder()
+                .setCustomId('delete')
+                .setLabel('Delete')
+                .setStyle(ButtonStyle.Danger)
+    );
 
-    return interaction.reply({
-        fetchReply: true,
+    await interaction.reply({
+        // fetchReply: true,
         embeds: [
             message
+        ],
+        components:[
+            buttonDelete
         ]
     });
+    
 })
