@@ -9,7 +9,8 @@
         "start": "nodemon --config nodemon.js src/index.ts",
         "dev": "nodemon --config nodemon.js src/index.ts",
         "deploy": "cross-env IS_SCRIPT=true ts-node src/scripts/deploy",
-        "deploy-prod": "cross-env NODE_ENV=production npm run deploy"
+        "deploy-prod": "cross-env NODE_ENV=production npm run deploy",
+        "purge-deploy": "cross-env IS_SCRIPT=true ts-node src/scripts/purge"
     },
     "keywords": [],
     "author": "",
