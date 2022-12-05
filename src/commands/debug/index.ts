@@ -5,6 +5,7 @@ import stats from './stats'
 import says from './says'
 import servericon from "./servericon"
 import google from "./google"
+import help from "./help"
 
 export default category('Debug', [
   ping,
@@ -13,4 +14,5 @@ export default category('Debug', [
   says,
   servericon,
   google,
+  help,
 ])
