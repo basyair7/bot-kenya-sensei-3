@@ -18,7 +18,7 @@ const meta = new SlashCommandBuilder()
     )
 
 export default command(meta, async ({ interaction, client }) => {
-    const target = await interaction.options.getUser('user')
+    const target = interaction.options.getUser('user')
     var user = client.users.cache.get(interaction.user.id)
 
     if (target !== null) {
