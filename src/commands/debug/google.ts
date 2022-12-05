@@ -10,11 +10,11 @@ import superagent from 'superagent';
 
 const meta = new SlashCommandBuilder()
   .setName("google")
-  .setDescription("Searching in google machine search")
+  .setDescription("Mesin percaian sensei dari google")
   .addStringOption((option) => {
       return option
           .setName('query')
-          .setDescription('Mesin percaian sensei dari google')
+          .setDescription('Apa yang ingin kamu cari nak?')
           .setMinLength(1)
           .setMaxLength(2000)
           .setRequired(false)
