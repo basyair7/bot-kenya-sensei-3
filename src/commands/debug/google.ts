@@ -17,7 +17,7 @@ const meta = new SlashCommandBuilder()
           .setDescription('Apa yang ingin kamu cari nak?')
           .setMinLength(1)
           .setMaxLength(2000)
-          .setRequired(false)
+          .setRequired(true)
   });
 
 export default command(meta, async({ interaction, client }) => {
