@@ -1,3 +1,4 @@
+import { Message } from 'discord.js';
 import commands from '../commands'
 import { Command } from '../types'
 import { EditReply, event, Reply } from '../utils'
@@ -42,10 +43,11 @@ export default event('interactionCreate', async (
             )
         }
     }
-    else if (interaction.isButton())
+    if (interaction.isButton())
     {
         if(interaction.customId === 'delete'){
             return await interaction.message.delete();
         }
     }
+
 })
