@@ -21,7 +21,7 @@ const meta = new SlashCommandBuilder()
   });
 
 export default command(meta, async({ interaction, client }) => {
-  var query = await interaction.options.getString('query');
+  var query = interaction.options.getString('query');
   if (!query) return interaction.reply({
       ephemeral: true,
       content: "No Query, Please Insert Your Search",
