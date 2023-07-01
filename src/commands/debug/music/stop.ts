@@ -47,7 +47,7 @@ export default command(meta, ({interaction, client}) => {
         .setDescription("Musik telah berhenti! :white_check_mark:")
         .setColor("Random")
 
-    interaction.reply({
+    return interaction.reply({
         embeds: [
             message
         ]

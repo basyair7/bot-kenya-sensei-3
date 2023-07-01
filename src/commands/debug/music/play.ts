@@ -19,22 +19,28 @@ import { command } from "../../../utils";
 import { queue, numQueue, nameQueue } from "./constants";
 let isPlaying = false;
 var song;
+let errorNum = 0;
 
 async function addToQueue(config: any, query: any, interaction: any) {
     // if (!interaction.isCommand()) return console.log("Interaksi tidak dikenal");
     // proses memasukan data lagu antrian
     try {
+        if(query.length === 0 || !query) {
+            return interaction.reply({
+                ephemeral: true,
+                content: "I couldn't find the song you request!"
+            });
+        }
         const data = query;
         song = {
             name: data.title,
             thumbnail: data.image,
             requested: interaction.user.tag,
             videoId: data.videoId,
-            duration: data.duration.toString(),
-            url: data.url
+            duration: data.duration.toString()
         };
 
-        queue.push(song.url);
+        queue.push(data.url);
         numQueue.push(queue.length.toString());
         nameQueue.push(song.name);
         const message = new EmbedBuilder()
@@ -52,23 +58,26 @@ async function addToQueue(config: any, query: any, interaction: any) {
             })
             .addFields({
                 name: "positioned", value: `${queue.length.toString()} in the queue`, inline: true
-            }, {
-                name: "url", value: song.url
             });
-
-        await interaction.reply({
+        errorNum = 0;
+        await interaction.deferReply();
+        interaction.deleteReply();
+        interaction.channel?.send({
             embeds: [
                 message
             ]
-        })
+        });
         if(!isPlaying){
-            await playAudio(config, queue[0], interaction);
+            playAudio(config, queue[0], interaction);
         }
     } catch(e) {
-        queue.splice(0, queue.length);
-        numQueue.splice(0, numQueue.length);
-        nameQueue.splice(0, nameQueue.length);
+        errorNum++;
         console.error(e);
+        if(errorNum >= 2) {
+          queue.splice(0, queue.length);
+          numQueue.splice(0, numQueue.length);
+          nameQueue.splice(0, nameQueue.length);
+        }
     }
 }
 
@@ -81,7 +90,7 @@ async function StopMusic(interaction: any, connection: any){
                 .setDescription("Musik telah berhenti! :white_check_mark:")
                 .setColor("Random")
 
-            await interaction.followUp({
+            interaction.channel?.send({
                     embeds: [
                         message
                     ]
@@ -139,7 +148,7 @@ async function playAudio(config: any, url: string, interaction: any) {
             .setImage(thumbnail)
             .setColor("#F93CCA");
 
-        interaction.followUp({
+        interaction.channel?.send({
             embeds: [
                 message
             ]
@@ -217,6 +226,12 @@ export default command(meta, async ({interaction, client}) => {
 
         // melakukan pencarian lagu
         const searchResult = (await search(query)).videos;
+        if(searchResult.length === 0 || !searchResult) {
+            return interaction.reply({
+                ephemeral: true,
+                content: "I couldn't find the song you request!"
+            });
+        }
         const video = searchResult[0];
         if (!video){
             const msgError = new EmbedBuilder()
