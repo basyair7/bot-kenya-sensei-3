@@ -67,6 +67,8 @@ async function addToQueue(config: any, query: any, interaction: any) {
         //         message
         //     ]
         // });
+      
+        interaction.deleteReply();
         if(!isPlaying){
             playAudio(config, queue[0], interaction);
         }
@@ -147,9 +149,7 @@ async function playAudio(config: any, url: string, interaction: any) {
             })
             .setImage(thumbnail)
             .setColor("#F93CCA");
-
-        interaction.deferReply();
-        interaction.deleteReply();
+      
         interaction.channel?.send({
             embeds: [
                 message
