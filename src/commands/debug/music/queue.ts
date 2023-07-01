@@ -3,7 +3,7 @@ import {
     EmbedBuilder,
 } from "discord.js";
 import { command } from "../../../utils";
-import { nameQueue, numQueue } from "./constants";
+import { nameQueue, numQueue, queue } from "./constants";
 
 const meta = new SlashCommandBuilder()
     .setName("queue")
@@ -22,10 +22,12 @@ export default command(meta, ({ interaction, client }) => {
     else {
         for (let i = 0; i < nameQueue.length; i++)
         {
-            let number = i+1;
-            msg.addFields({ 
-                name: "Antrian musik", value: `${number.toString()}. ${nameQueue[i]}`
-            });
+            for (let j = 0; j < queue.length; j++) {
+                let number = i+1;
+                msg.addFields({ 
+                    name: `${number.toString()}. ${nameQueue[i]}`, value: `${queue[j]}` 
+                });
+            }
         }
     }
 

@@ -43,30 +43,30 @@ async function addToQueue(config: any, query: any, interaction: any) {
         queue.push(data.url);
         numQueue.push(queue.length.toString());
         nameQueue.push(song.name);
-        const message = new EmbedBuilder()
-            // .setTitle("Tambah antrian musik")
-            .setAuthor({
-                name: "Tambah antrian musik",
-                iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
-            })
-            .setDescription(`${song.name}`)
-            .setColor("#F93CCA")
-            .addFields({
-                name: "durasi", value: song.duration, inline: true
-            },{
-                name: "requested by", value: song.requested, inline: false
-            })
-            .addFields({
-                name: "positioned", value: `${queue.length.toString()} in the queue`, inline: true
-            });
+        // const message = new EmbedBuilder()
+        //     // .setTitle("Tambah antrian musik")
+        //     .setAuthor({
+        //         name: "Tambah antrian musik",
+        //         iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
+        //     })
+        //     .setDescription(`${song.name}`)
+        //     .setColor("#F93CCA")
+        //     .addFields({
+        //         name: "durasi", value: song.duration, inline: true
+        //     },{
+        //         name: "requested by", value: song.requested, inline: false
+        //     })
+        //     .addFields({
+        //         name: "positioned", value: `${queue.length.toString()} in the queue`, inline: true
+        //     });
         errorNum = 0;
-        await interaction.deferReply();
-        interaction.deleteReply();
-        interaction.channel?.send({
-            embeds: [
-                message
-            ]
-        });
+        // await interaction.deferReply();
+        // interaction.deleteReply();
+        // interaction.channel?.send({
+        //     embeds: [
+        //         message
+        //     ]
+        // });
         if(!isPlaying){
             playAudio(config, queue[0], interaction);
         }
@@ -89,7 +89,7 @@ async function StopMusic(interaction: any, connection: any){
             const message = new EmbedBuilder()
                 .setDescription("Musik telah berhenti! :white_check_mark:")
                 .setColor("Random")
-
+                
             interaction.channel?.send({
                     embeds: [
                         message
@@ -148,6 +148,8 @@ async function playAudio(config: any, url: string, interaction: any) {
             .setImage(thumbnail)
             .setColor("#F93CCA");
 
+        interaction.deferReply();
+        interaction.deleteReply();
         interaction.channel?.send({
             embeds: [
                 message
