@@ -42,9 +42,7 @@ export default command(meta, async ({ interaction, client }) => {
 
     await interaction.reply({
         // fetchReply: true,
-        embeds: [
-            message
-        ],
+        embeds: [message],
         components:[
             buttonDelete
         ]

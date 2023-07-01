@@ -1,6 +1,6 @@
 import {
     InteractionReplyOptions,
-    WebhookEditMessageOptions,
+    // WebhookEditMessageOptions,
 } from 'discord.js';
 
 
@@ -21,8 +21,9 @@ export const Reply = {
 }
 
 export const EditReply = {
-    error(msg: string): WebhookEditMessageOptions {
+    error(msg: string): InteractionReplyOptions {
         return {
+            ephemeral: true,
             embeds: [{
                 color: Colors.error,
                 description: msg
@@ -30,3 +31,14 @@ export const EditReply = {
         }
     }
 }
+
+// export const EditReply = {
+//     error(msg: string): WebhookEditMessageOptions {
+//         return {
+//             embeds: [{
+//                 color: Colors.error,
+//                 description: msg
+//             }]
+//         }
+//     }
+// }

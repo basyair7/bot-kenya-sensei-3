@@ -28,6 +28,9 @@ export default command(meta, async ({ interaction, client }) => {
 
     interaction.deferReply();
     interaction.deleteReply();
-    interaction.channel?.send(`${message}`)
+    const channel = interaction.channel;
+    if (channel && ('send' in channel)) {
+        channel.send(`${message}`);
+    }
 
 })

@@ -1,13 +1,14 @@
-import { category } from '../../utils'
-import ping from './ping'
-import mukaku from './mukaku'
-import stats from './stats'
-import says from './says'
-import servericon from "./servericon"
-import google from "./google"
-import help from "./help"
+import { category } from '../../utils';
+import ping from './ping';
+import mukaku from './mukaku';
+import stats from './stats';
+import says from './says';
+import servericon from './servericon';
+import google from './google';
+import help from './help';
+// import uptime from './uptime';
 
-export default category('Stable', [
+export default category('Debug', [
   ping,
   stats,
   mukaku,
@@ -15,4 +16,5 @@ export default category('Stable', [
   servericon,
   google,
   help,
+  // uptime,
 ])
