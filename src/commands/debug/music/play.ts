@@ -19,67 +19,56 @@ import { command } from "../../../utils";
 import { queue, numQueue, nameQueue } from "./constants";
 let isPlaying = false;
 var song;
-let errorNum = 0;
 
 async function addToQueue(config: any, query: any, interaction: any) {
     // if (!interaction.isCommand()) return console.log("Interaksi tidak dikenal");
     // proses memasukan data lagu antrian
     try {
-        if(query.length === 0 || !query) {
-            return interaction.reply({
-                ephemeral: true,
-                content: "I couldn't find the song you request!"
-            });
-        }
         const data = query;
         song = {
             name: data.title,
             thumbnail: data.image,
             requested: interaction.user.tag,
             videoId: data.videoId,
-            duration: data.duration.toString()
+            duration: data.duration.toString(),
+            url: data.url
         };
 
-        queue.push(data.url);
+        queue.push(song.url);
         numQueue.push(queue.length.toString());
         nameQueue.push(song.name);
-        // const message = new EmbedBuilder()
-        //     // .setTitle("Tambah antrian musik")
-        //     .setAuthor({
-        //         name: "Tambah antrian musik",
-        //         iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
-        //     })
-        //     .setDescription(`${song.name}`)
-        //     .setColor("#F93CCA")
-        //     .addFields({
-        //         name: "durasi", value: song.duration, inline: true
-        //     },{
-        //         name: "requested by", value: song.requested, inline: false
-        //     })
-        //     .addFields({
-        //         name: "positioned", value: `${queue.length.toString()} in the queue`, inline: true
-        //     });
-        errorNum = 0;
-        // await interaction.deferReply();
-        // interaction.deleteReply();
-        // interaction.channel?.send({
-        //     embeds: [
-        //         message
-        //     ]
-        // });
-      
-        interaction.deleteReply();
+        const message = new EmbedBuilder()
+            // .setTitle("Tambah antrian musik")
+            .setAuthor({
+                name: "Tambah antrian musik",
+                iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
+            })
+            .setDescription(`${song.name}`)
+            .setColor("#F93CCA")
+            .addFields({
+                name: "durasi", value: song.duration, inline: true
+            },{
+                name: "requested by", value: song.requested, inline: false
+            })
+            .addFields({
+                name: "positioned", value: `${queue.length.toString()} in the queue`, inline: true
+            }, {
+                name: "url", value: song.url
+            });
+
+        await interaction.channel?.send({
+            embeds: [
+                message
+            ]
+        })
         if(!isPlaying){
-            playAudio(config, queue[0], interaction);
+            await playAudio(config, queue[0], interaction);
         }
     } catch(e) {
-        errorNum++;
+        queue.splice(0, queue.length);
+        numQueue.splice(0, numQueue.length);
+        nameQueue.splice(0, nameQueue.length);
         console.error(e);
-        if(errorNum >= 2) {
-          queue.splice(0, queue.length);
-          numQueue.splice(0, numQueue.length);
-          nameQueue.splice(0, nameQueue.length);
-        }
     }
 }
 
@@ -91,8 +80,8 @@ async function StopMusic(interaction: any, connection: any){
             const message = new EmbedBuilder()
                 .setDescription("Musik telah berhenti! :white_check_mark:")
                 .setColor("Random")
-                
-            interaction.channel?.send({
+
+            await interaction.channel?.send({
                     embeds: [
                         message
                     ]
@@ -149,7 +138,7 @@ async function playAudio(config: any, url: string, interaction: any) {
             })
             .setImage(thumbnail)
             .setColor("#F93CCA");
-      
+
         interaction.channel?.send({
             embeds: [
                 message
