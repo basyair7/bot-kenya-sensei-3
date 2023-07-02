@@ -6,7 +6,7 @@ import { command } from '../../utils';
 
 const meta = new SlashCommandBuilder()
     .setName('help')
-    .setDescription('Show List Menu Bot')
+    .setDescription('Show List Menu Bot');
 
 export default command(meta, 
     async ({ interaction, client }) => {
@@ -57,13 +57,11 @@ export default command(meta,
                 name: 'Commands 5', value: cmd5, inline: true
             }, {
                 name: 'Commands 6', value: cmd6, inline: true
-            })
+            });
             
         return interaction.reply({
             ephemeral: true,
-            embeds: [
-                messageHelp
-            ]
-        })
+            embeds: [ messageHelp ]
+        });
     }
 )

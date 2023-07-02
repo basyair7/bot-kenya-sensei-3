@@ -60,5 +60,5 @@ import {
     return interaction.reply({
         embeds: [message],
         components: [buttonDelete]
-    })
+    });
   })
