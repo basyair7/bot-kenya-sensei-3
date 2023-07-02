@@ -223,8 +223,7 @@ export default command(meta, async ({interaction, client}) => {
         // melakukan pencarian lagu
         const searchResult = (await search(query)).videos;
         if(searchResult.length === 0 || !searchResult) {
-            return interaction.reply({
-                ephemeral: true,
+            return interaction.editReply({
                 content: "I couldn't find the song you request! :negative_squared_cross_mark:"
             });
         }
