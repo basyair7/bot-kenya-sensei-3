@@ -39,7 +39,7 @@ export default command(meta, ({ interaction, client }) => {
         {
             let number = i+1;
             msg.addFields({ 
-                name: `${number.toString()}. ${nameQueue[i]}`, value: `${queue[i]}` 
+                name: `${number.toString()}. ${nameQueue[i]}`, value: `${queue[i]["url"]}` 
             });
         }
     }
