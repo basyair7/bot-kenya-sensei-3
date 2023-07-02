@@ -59,32 +59,19 @@ export default command(
                 });
                 
             } else {
-                const subscription = connection.state.subscription;
-                if (subscription) {
-                    queue.shift();
-                    numQueue.shift();
-                    nameQueue.shift();
-                    subscription.player.stop();
-                    // connection.disconnect();
-                    
-                    const message = new EmbedBuilder()
-                        .setDescription("Skip musik :white_check_mark:")
-                        .setColor("Random");
+                queue.shift();
+                numQueue.shift();
+                nameQueue.shift();
+                connection.disconnect();
+                
+                const message = new EmbedBuilder()
+                    .setDescription("Skip musik :white_check_mark:")
+                    .setColor("Random");
 
-                    interaction.reply({
-                        fetchReply: true,
-                        embeds: [ message ]
-                    });
-
-                } else {
-                    const message = new EmbedBuilder()
-                        .setDescription("Tidak ada antrian lagu");
-                    
-                    return interaction.reply({
-                        ephemeral: true,
-                        embeds: [ message ]
-                    });
-                }
+                return interaction.reply({
+                    fetchReply: true,
+                    embeds: [ message ]
+                });
             }
         }
 
