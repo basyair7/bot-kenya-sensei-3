@@ -87,6 +87,7 @@ async function StopMusic(interaction: any, connection: any){
             embeds: [ msg ]
         });
         connection.disconnect();
+        connection.destroy();
     }
 }
 
