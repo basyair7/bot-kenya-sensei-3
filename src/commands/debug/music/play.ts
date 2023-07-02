@@ -80,6 +80,7 @@ async function StopMusic(interaction: any, connection: any){
             content: "Musik telah berhenti! :white_check_mark:"
         })
         connection.disconnect();
+        connection.destroy();
         // if(minute%10 === 0) {
         //     connection.destroy();
         // }
