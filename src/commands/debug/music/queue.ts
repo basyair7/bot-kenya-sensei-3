@@ -37,12 +37,10 @@ export default command(meta, ({ interaction, client }) => {
     else {
         for (let i = 0; i < nameQueue.length; i++)
         {
-            for (let j = 0; j < queue.length; j++) {
-                let number = i+1;
-                msg.addFields({ 
-                    name: `${number.toString()}. ${nameQueue[i]}`, value: `${queue[j]}` 
-                });
-            }
+            let number = i+1;
+            msg.addFields({ 
+                name: `${number.toString()}. ${nameQueue[i]}`, value: `${queue[i]}` 
+            });
         }
     }
 

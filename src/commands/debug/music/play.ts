@@ -237,7 +237,7 @@ export default command(meta, async ({interaction, client}) => {
         await interaction.reply({
             content: `Play music ${query} :notes:`,
             fetchReply: true
-        })
+        });
 
         // masukan ke antrian
         await addToQueue(config, video, interaction);
