@@ -80,7 +80,6 @@ async function StopMusic(interaction: any, connection: any){
             content: "Musik telah berhenti! :white_check_mark:"
         })
         connection.disconnect();
-        connection.destroy();
         // if(minute%10 === 0) {
         //     connection.destroy();
         // }
@@ -121,7 +120,7 @@ async function playAudio(config: any, data: any, interaction: any) {
             } 
             else {
                 if(connection.state.status === VoiceConnectionStatus.Disconnected) {
-                    playAudio(config, queue[0], interaction);
+                    await playAudio(config, queue[0], interaction);
                 }
             }
         });
@@ -156,7 +155,7 @@ async function playAudio(config: any, data: any, interaction: any) {
                     queue.shift();
                     numQueue.shift();
                     nameQueue.shift();
-                    playAudio(config, queue[0], interaction);
+                    await playAudio(config, queue[0], interaction);
                 }
             });
 
