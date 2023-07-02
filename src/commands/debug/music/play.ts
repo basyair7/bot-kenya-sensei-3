@@ -73,21 +73,25 @@ async function addToQueue(config: any, query: any, interaction: any) {
 
 async function StopMusic(interaction: any, connection: any){
     // cek jika antrian sudah habis maka bot berhenti memutarkan musik
-    if(queue.length === 0){
-        // Disconnect dari channel
-        isPlaying = false;
-        const msg = new EmbedBuilder()
-            .setAuthor({
-                name: "Memutar musik",
-                iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
-            })
-            .setDescription("Musik telah berhenti! :white_check_mark:");
-
-        interaction.followUp({
-            embeds: [ msg ]
-        });
-        connection.disconnect();
-        connection.destroy();
+    try {
+        if(queue.length === 0){
+            // Disconnect dari channel
+            isPlaying = false;
+            const msg = new EmbedBuilder()
+                .setAuthor({
+                    name: "Memutar musik",
+                    iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
+                })
+                .setDescription("Musik telah berhenti! :white_check_mark:");
+    
+            interaction.followUp({
+                embeds: [ msg ]
+            });
+            connection.disconnect();
+            connection.destroy();
+        }
+    } catch(e) {
+        console.error(`Something went error in StopMusic :( ${e}`);
     }
 }
 
