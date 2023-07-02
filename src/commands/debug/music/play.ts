@@ -57,7 +57,7 @@ async function addToQueue(config: any, query: any, interaction: any) {
                 name: "url", value: song.url
             });
 
-        interaction.editReply({
+        await interaction.editReply({
             embeds: [
                 message
             ]
