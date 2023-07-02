@@ -223,6 +223,12 @@ export default command(meta, async ({interaction, client}) => {
                 content: "I couldn't find the song you request! :negative_squared_cross_mark:"
             });
         }
+        
+        await interaction.reply({
+            content: `Play music ${query} :notes:`,
+            fetchReply: true
+        });
+
         const video = searchResult[0];
         if (!video){
             const msgError = new EmbedBuilder()
@@ -233,10 +239,6 @@ export default command(meta, async ({interaction, client}) => {
                 embeds: [ msgError ]
             });
         }
-        await interaction.reply({
-            content: `Play music ${query} :notes:`,
-            fetchReply: true
-        });
 
         // masukan ke antrian
         await addToQueue(config, video, interaction);
