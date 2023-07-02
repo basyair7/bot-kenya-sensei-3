@@ -12,8 +12,7 @@ import {
     VoiceConnectionStatus
 } from "@discordjs/voice";
 import ytdl from "ytdl-core";
-import yts, { search } from "yt-search";
-import { DateTime } from "luxon";
+import { search } from "yt-search";
 import { command } from "../../../utils";
 
 // antrian untuk lagu
