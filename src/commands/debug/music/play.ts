@@ -115,21 +115,6 @@ async function playAudio(config: any, data: any, interaction: any) {
         const URLYt = data["url"];
         const user = data["requested"];
 
-        connection.on(VoiceConnectionStatus.Disconnected, async () => {
-            if (queue.length === 0) {
-                isPlaying = false;
-                queue.splice(0, queue.length);
-                numQueue.splice(0, numQueue.length);
-                nameQueue.splice(0, nameQueue.length);
-                StopMusic(interaction, connection);
-            } 
-            else {
-                if(connection.state.status === VoiceConnectionStatus.Disconnected) {
-                    await playAudio(config, queue[0], interaction);
-                }
-            }
-        });
-
         const message = new EmbedBuilder()
             .setAuthor({
                 name: "Memutar musik",
@@ -153,6 +138,13 @@ async function playAudio(config: any, data: any, interaction: any) {
         });
         
         connection.on(VoiceConnectionStatus.Ready, async () => {
+            player.on('error', (err) =>{ return console.error(`Ada yang error pada program play.ts ${err}`);});
+            
+            connection.subscribe(player);
+            const stream = ytdl(URLYt, { filter: 'audioonly' });
+            const res = createAudioResource(stream);
+            player.play(res);
+
             player.on(AudioPlayerStatus.Idle, async () => {
                 if (player.state.status === AudioPlayerStatus.Idle 
                     && connection.state.status === VoiceConnectionStatus.Ready)
@@ -160,21 +152,25 @@ async function playAudio(config: any, data: any, interaction: any) {
                     queue.shift();
                     numQueue.shift();
                     nameQueue.shift();
-                    await playAudio(config, queue[0], interaction);
+                    connection.disconnect();
+                    // await playAudio(config, queue[0], interaction);
                 }
             });
+        });
 
-            if(connection.state.status === VoiceConnectionStatus.Disconnected)
-            {
+        connection.on(VoiceConnectionStatus.Disconnected, async () => {
+            if (queue.length === 0) {
+                isPlaying = false;
                 queue.splice(0, queue.length);
+                numQueue.splice(0, numQueue.length);
+                nameQueue.splice(0, nameQueue.length);
+                StopMusic(interaction, connection);
+            } 
+            else {
+                if(connection.state.status === VoiceConnectionStatus.Disconnected) {
+                    await playAudio(config, queue[0], interaction);
+                }
             }
-    
-            player.on('error', (err) =>{ return console.error(`Ada yang error pada program play.ts ${err}`);});
-            
-            connection.subscribe(player);
-            const stream = ytdl(URLYt, { filter: 'audioonly' });
-            const res = createAudioResource(stream);
-            player.play(res);
         });
     
     } catch(err) {
