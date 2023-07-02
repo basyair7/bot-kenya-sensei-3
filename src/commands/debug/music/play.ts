@@ -36,7 +36,6 @@ async function addToQueue(config: any, query: any, interaction: any) {
         };
 
         queue.push(song);
-        numQueue.push(queue.length.toString());
         nameQueue.push(song.name);
 
         const message = new EmbedBuilder()
@@ -84,7 +83,7 @@ async function StopMusic(interaction: any, connection: any){
                 })
                 .setDescription("Musik telah berhenti! :white_check_mark:");
                 
-            connection.disconnect();
+            // connection.disconnect();
             connection.destroy();
             
             return interaction.followUp({
@@ -119,6 +118,7 @@ async function playAudio(config: any, data: any, interaction: any) {
         const thumbnail = data["image"];
         const URLYt = data["url"];
         const user = data["requested"];
+        numQueue.push(queue.length.toString());
 
         const message = new EmbedBuilder()
             .setAuthor({
