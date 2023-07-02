@@ -209,6 +209,11 @@ export default command(meta, async ({interaction, client}) => {
             });
         }
 
+        await interaction.reply({
+            content: `Play music ${query} :notes:`,
+            fetchReply: true
+        });
+
         // masukan konfigurasi id
         var config = {
             channelID: channelId,
@@ -223,11 +228,6 @@ export default command(meta, async ({interaction, client}) => {
                 content: "I couldn't find the song you request! :negative_squared_cross_mark:"
             });
         }
-        
-        await interaction.reply({
-            content: `Play music ${query} :notes:`,
-            fetchReply: true
-        });
 
         const video = searchResult[0];
         if (!video){
