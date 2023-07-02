@@ -60,7 +60,7 @@ export default command(
                 
             } else {
                 queue.shift();
-                numQueue.shift();
+                // numQueue.shift();
                 nameQueue.shift();
                 connection.disconnect();
                 
