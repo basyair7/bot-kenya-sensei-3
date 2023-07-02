@@ -234,7 +234,7 @@ export default command(meta, async ({interaction, client}) => {
                 embeds: [ msgError ]
             });
         }
-        await interaction.reply({
+        interaction.reply({
             content: `Play music ${query} :notes:`,
             fetchReply: true
         });
