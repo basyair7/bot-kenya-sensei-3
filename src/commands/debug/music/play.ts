@@ -83,12 +83,13 @@ async function StopMusic(interaction: any, connection: any){
                     iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
                 })
                 .setDescription("Musik telah berhenti! :white_check_mark:");
-    
-            interaction.followUp({
-                embeds: [ msg ]
-            });
+                
             connection.disconnect();
             connection.destroy();
+            
+            return interaction.followUp({
+                embeds: [ msg ]
+            });
         }
     } catch(e) {
         console.error(`Something went error in StopMusic :( ${e}`);
@@ -145,7 +146,11 @@ async function playAudio(config: any, data: any, interaction: any) {
             player.on('error', (err) =>{ return console.error(`Ada yang error pada program play.ts ${err}`);});
             
             connection.subscribe(player);
-            const stream = ytdl(URLYt, { filter: 'audioonly' });
+            const stream = ytdl(URLYt, { 
+                filter: "audioonly",
+                quality: "highestaudio",
+                highWaterMark: 1 << 25,
+            });
             const res = createAudioResource(stream);
             player.play(res);
 
