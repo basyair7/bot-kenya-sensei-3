@@ -1,17 +1,18 @@
+import { DateTime } from "luxon";
+
 export function DateTimeBot() {
-    var { DateTime } = require("luxon");
-    var local = DateTime.local();
+    var local = DateTime.now();
     var rezonedString = local.setZone("Asia/Jakarta");
 
     // get Date
-    let year = rezonedString.c.year;
-    let month = rezonedString.c.month;
-    let day = rezonedString.c.day;
+    let year = rezonedString.year;
+    let month = rezonedString.month;
+    let day = rezonedString.day;
 
     // get Time
-    let hour = rezonedString.c.hour;
-    let minute = rezonedString.c.minute;
-    let second = rezonedString.c.second;
+    let hour = rezonedString.hour;
+    let minute = rezonedString.minute;
+    let second = rezonedString.second;
 
     let datetime = year + "/" + month + "/" + day + " (" + hour + ":" + minute + ":" + second + ")";
 

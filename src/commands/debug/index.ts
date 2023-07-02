@@ -6,7 +6,7 @@ import says from './says';
 import servericon from './servericon';
 import google from './google';
 import help from './help';
-import uptime from './uptime';
+// import uptime from './uptime';
 import join from './join';
 import play from './music/play';
 import stop from './music/stop';
@@ -20,7 +20,7 @@ export default category('Debug', [
   servericon,
   google,
   help,
-  uptime,
+  // uptime,
   join,
   play,
   stop,

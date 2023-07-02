@@ -37,11 +37,10 @@ export default command(meta, ({interaction, client}) => {
         adapterCreator: interaction.guild?.voiceAdapterCreator as DiscordGatewayAdapterCreator
     });
 
-    // voiceConnection.disconnect();
     queue.splice(0, queue.length);
     numQueue.splice(0, numQueue.length);
     nameQueue.splice(0, nameQueue.length);
-    voiceConnection.disconnect();
+    voiceConnection.destroy();
 
     const message = new EmbedBuilder()
         .setDescription("Musik telah berhenti! :white_check_mark:")

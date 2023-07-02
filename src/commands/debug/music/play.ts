@@ -3,7 +3,7 @@ import {
     EmbedBuilder,
 } from "discord.js";
 import { 
-    DiscordGatewayAdapterCreator, 
+    DiscordGatewayAdapterCreator,
     joinVoiceChannel, 
     createAudioPlayer,
     createAudioResource,
@@ -13,6 +13,7 @@ import {
 } from "@discordjs/voice";
 import ytdl from "ytdl-core";
 import yts, { search } from "yt-search";
+import { DateTime } from "luxon";
 import { command } from "../../../utils";
 
 // antrian untuk lagu
@@ -37,6 +38,7 @@ async function addToQueue(config: any, query: any, interaction: any) {
         queue.push(song.url);
         numQueue.push(queue.length.toString());
         nameQueue.push(song.name);
+
         const message = new EmbedBuilder()
             // .setTitle("Tambah antrian musik")
             .setAuthor({
@@ -56,7 +58,7 @@ async function addToQueue(config: any, query: any, interaction: any) {
                 name: "url", value: song.url
             });
 
-        await interaction.channel?.send({
+        interaction.editReply({
             embeds: [
                 message
             ]
@@ -73,21 +75,21 @@ async function addToQueue(config: any, query: any, interaction: any) {
 }
 
 async function StopMusic(interaction: any, connection: any){
-        // cek jika antrian sudah habis maka bot berhenti memutarkan musik
-        if(queue.length === 0){
-            // Disconnect dari channel
-            isPlaying = false;
-            const message = new EmbedBuilder()
-                .setDescription("Musik telah berhenti! :white_check_mark:")
-                .setColor("Random")
-
-            await interaction.channel?.send({
-                    embeds: [
-                        message
-                    ]
-                })
-            connection.destroy();
-        }
+    // var local = DateTime.now();
+    // var rezonedString = local.setZone("Asia/Jakarta");
+    // let minute = rezonedString.second;
+    // cek jika antrian sudah habis maka bot berhenti memutarkan musik
+    if(queue.length === 0){
+        // Disconnect dari channel
+        isPlaying = false;
+        interaction.editReply({
+            content: "Musik telah berhenti! :white_check_mark:"
+        })
+        connection.disconnect();
+        // if(minute%10 === 0) {
+        //     connection.destroy();
+        // }
+    }
 }
 
 async function playAudio(config: any, url: string, interaction: any) {
@@ -139,7 +141,7 @@ async function playAudio(config: any, url: string, interaction: any) {
             .setImage(thumbnail)
             .setColor("#F93CCA");
 
-        interaction.channel?.send({
+        interaction.editReply({
             embeds: [
                 message
             ]
@@ -199,7 +201,7 @@ export default command(meta, async ({interaction, client}) => {
         // jika melakukan query tapi tidak ada di voice channel, maka
         if (!channelId){
             const msg = new EmbedBuilder()
-                .setDescription("Kamu harus join voice channel dulu nak!")
+                .setDescription("Kamu harus join voice channel dulu nak! :negative_squared_cross_mark:")
                 .setColor("Red");
             return interaction.reply({
                 ephemeral: true,
@@ -220,7 +222,7 @@ export default command(meta, async ({interaction, client}) => {
         if(searchResult.length === 0 || !searchResult) {
             return interaction.reply({
                 ephemeral: true,
-                content: "I couldn't find the song you request!"
+                content: "I couldn't find the song you request! :negative_squared_cross_mark:"
             });
         }
         const video = searchResult[0];
@@ -233,6 +235,10 @@ export default command(meta, async ({interaction, client}) => {
                 embeds: [ msgError ]
             });
         }
+        await interaction.reply({
+            content: `Play music ${query} :notes:`,
+            fetchReply: true
+        })
 
         // masukan ke antrian
         await addToQueue(config, video, interaction);

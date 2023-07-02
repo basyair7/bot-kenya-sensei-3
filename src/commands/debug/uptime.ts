@@ -5,24 +5,30 @@ import {
     ButtonBuilder, 
     EmbedBuilder,
 } from 'discord.js';
+// import prettyMilliseconds from 'pretty-ms';
 import { command, DateTimeBot } from '../../utils';
 
 const meta = new SlashCommandBuilder()
     .setName('uptime')
-    .setDescription('waktu aktif bot')
+    .setDescription('waktu aktif bot');
 
 export default command(meta, async ({ interaction, client }) => {
     try {
-        const ms = require("pretty-ms");
-        const datetime = DateTimeBot()
-        const uptime = await ms(client.uptime, { verbose: true });
+        const prettyMilliseconds = require("pretty-ms");
+        const upclient = client.uptime!;
+        const option = {
+            colonNotation: true,
+            verbose: true,
+        }
+        const datetime = DateTimeBot();
+        const uptime = prettyMilliseconds(upclient);
         const embed = new EmbedBuilder()
             .setTitle("Uptime Bot")
             .setColor("Random")
             .addFields({
                 name: 'Date', value: datetime,
             }, {
-                name: 'Bot Uptime', value: uptime,
+                name: 'Bot Uptime', value: "uptime",
             });
         
         const buttonDelete = new ActionRowBuilder<ButtonBuilder>()
