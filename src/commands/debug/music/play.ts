@@ -59,9 +59,7 @@ async function addToQueue(config: any, query: any, interaction: any) {
             });
 
         interaction.editReply({
-            embeds: [
-                message
-            ]
+            embeds: [ message ]
         })
         if(!isPlaying){
             await playAudio(config, queue[0], interaction);
@@ -117,7 +115,18 @@ async function playAudio(config: any, data: any, interaction: any) {
         const {user} = interaction
 
         connection.on(VoiceConnectionStatus.Disconnected, async () => {
-            await StopMusic(interaction, connection);
+            // await StopMusic(interaction, connection);
+            if (queue.length === 0) {
+                isPlaying = false;
+                queue.splice(0, queue.length);
+                numQueue.splice(0, numQueue.length);
+                nameQueue.splice(0, nameQueue.length);
+                await StopMusic(interaction, connection);
+            } else {
+                if(connection.state.status === VoiceConnectionStatus.Disconnected) {
+                    playAudio(config, queue[0], interaction);
+                }
+            }
         });
 
         const message = new EmbedBuilder()
@@ -139,36 +148,39 @@ async function playAudio(config: any, data: any, interaction: any) {
             .setImage(thumbnail)
             .setColor("#F93CCA");
 
-        interaction.editReply({
-            embeds: [
-                message
-            ]
+        await interaction.channel?.send({
+            embeds: [ message ]
         });
         
-        player.on(AudioPlayerStatus.Idle, async () => {
-            if (player.state.status === AudioPlayerStatus.Idle && connection.state.status === VoiceConnectionStatus.Ready)
-            {
-                queue.shift();
-                numQueue.shift();
-                nameQueue.shift();
-                playAudio(config, queue[0], interaction);
-            }
-        });
-        if(connection.state.status === VoiceConnectionStatus.Disconnected)
-        {
-            queue.splice(0, queue.length);
-        }
+        connection.on(VoiceConnectionStatus.Ready, async () => {
+            player.on(AudioPlayerStatus.Idle, async () => {
+                if (player.state.status === AudioPlayerStatus.Idle 
+                    && connection.state.status === VoiceConnectionStatus.Ready)
+                {
+                    queue.shift();
+                    numQueue.shift();
+                    nameQueue.shift();
+                    playAudio(config, queue[0], interaction);
+                }
+            });
 
-        player.on('error', (err) =>{ return console.error(`Ada yang error pada program play.ts ${err}`);});
-        
-        connection.subscribe(player);
-        const stream = ytdl(URLYt, { filter: 'audioonly' });
-        const res = createAudioResource(stream);
-        player.play(res);
+            if(connection.state.status === VoiceConnectionStatus.Disconnected)
+            {
+                queue.splice(0, queue.length);
+            }
+    
+            player.on('error', (err) =>{ return console.error(`Ada yang error pada program play.ts ${err}`);});
+            
+            connection.subscribe(player);
+            const stream = ytdl(URLYt, { filter: 'audioonly' });
+            const res = createAudioResource(stream);
+            player.play(res);
+        });
     
     } catch(err) {
         // console.error(err);
-        if (player.state.status === AudioPlayerStatus.Idle && connection.state.status === VoiceConnectionStatus.Ready)
+        if (player.state.status === AudioPlayerStatus.Idle 
+            && connection.state.status === VoiceConnectionStatus.Ready)
         {
             await StopMusic(interaction, connection);
         }
@@ -203,9 +215,7 @@ export default command(meta, async ({interaction, client}) => {
                 .setColor("Red");
             return interaction.reply({
                 ephemeral: true,
-                embeds: [
-                    msg
-                ]
+                embeds: [ msg ]
             });
         }
 
@@ -234,7 +244,7 @@ export default command(meta, async ({interaction, client}) => {
                 .setDescription(`Tidak ditemukan lagu ${query}`)
                 .setColor("Red");
             
-            return interaction.reply({
+            return interaction.editReply({
                 embeds: [ msgError ]
             });
         }

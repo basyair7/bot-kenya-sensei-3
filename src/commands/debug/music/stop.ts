@@ -5,7 +5,8 @@ import {
 import {
     joinVoiceChannel,
     VoiceConnection,
-    DiscordGatewayAdapterCreator
+    DiscordGatewayAdapterCreator,
+    getVoiceConnection
 } from "@discordjs/voice";
 import { queue, numQueue, nameQueue } from "./constants";
 
@@ -13,7 +14,7 @@ import { command } from "../../../utils";
 
 const meta = new SlashCommandBuilder()
     .setName("stop")
-    .setDescription("Berhenti memainkan musik")
+    .setDescription("Berhenti memainkan musik");
 
 export default command(meta, ({interaction, client}) => {
     const guildId = interaction.guild?.id;
@@ -23,33 +24,44 @@ export default command(meta, ({interaction, client}) => {
     if (!channelId){
         const msg = new EmbedBuilder()
             .setDescription("Kamu harus join voice channel dulu nak!")
-            .setColor("Red")
+            .setColor("Red");
         return interaction.reply({
             ephemeral: true,
-            embeds: [
-                msg
-            ]
+            embeds: [ msg ]
         })
     }
-    const voiceConnection = joinVoiceChannel({
-        channelId: channelId!,
-        guildId: guildId!,
-        adapterCreator: interaction.guild?.voiceAdapterCreator as DiscordGatewayAdapterCreator
-    });
+    const voiceConnection = getVoiceConnection(guildId!);
+    if (!voiceConnection) {
+        const msg = new EmbedBuilder()
+            .setDescription("Sensei-bot tidak ada di dalam voice channel ini! :negative_squared_cross_mark:")
+            .setColor("Red");
 
-    queue.splice(0, queue.length);
-    numQueue.splice(0, numQueue.length);
-    nameQueue.splice(0, nameQueue.length);
-    voiceConnection.disconnect();
-    voiceConnection.destroy();
+        return interaction.reply({
+            ephemeral: true,
+            embeds: [ msg ]
+        });
+    }
+    if (queue.length === 0){
+        const message = new EmbedBuilder()
+            .setDescription("Tidak ada musik yang sendang dimainkan... :negative_squared_cross_mark:")
+            .setColor("Yellow");
 
-    const message = new EmbedBuilder()
-        .setDescription("Musik telah berhenti! :white_check_mark:")
-        .setColor("Random")
+        return interaction.reply({
+            ephemeral: true,
+            embeds: [ message ]
+        });
 
-    return interaction.reply({
-        embeds: [
-            message
-        ]
-    })
+    } else {
+        queue.splice(0, queue.length);
+        numQueue.splice(0, numQueue.length);
+        nameQueue.splice(0, nameQueue.length);
+        voiceConnection.destroy();
+        const message = new EmbedBuilder()
+            .setDescription("Musik telah berhenti! :white_check_mark:")
+            .setColor("Random");
+
+        return interaction.reply({
+            embeds: [ message ]
+        });
+    }
 })

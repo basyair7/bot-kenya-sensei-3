@@ -3,9 +3,8 @@ import {
     EmbedBuilder,
     ChannelType
 } from "discord.js";
-// import { QueryType } from "discord-player";
 import { command } from "../../utils";
-import { DiscordGatewayAdapterCreator, getVoiceConnections, joinVoiceChannel } from "@discordjs/voice";
+import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice";
 
 const meta = new SlashCommandBuilder()
     .setName("join")

@@ -11,6 +11,8 @@ import join from './join';
 import play from './music/play';
 import stop from './music/stop';
 import queue from './music/queue';
+import skip from './music/skip';
+import left from './left';
 
 export default category('Debug', [
   ping,
@@ -22,7 +24,9 @@ export default category('Debug', [
   help,
   // uptime,
   join,
+  left,
   play,
   stop,
-  queue
+  queue,
+  skip,
 ])
