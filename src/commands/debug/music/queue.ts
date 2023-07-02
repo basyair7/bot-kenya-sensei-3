@@ -19,10 +19,8 @@ export default command(meta, ({ interaction, client }) => {
             .setColor("Red")
         return interaction.reply({
             ephemeral: true,
-            embeds: [
-                msg
-            ]
-        })
+            embeds: [ msg ]
+        });
     }
 
     const msg = new EmbedBuilder()
@@ -30,9 +28,19 @@ export default command(meta, ({ interaction, client }) => {
             name: "Daftar antrian musik bot sensei",
             iconURL: "https://img.icons8.com/color/2x/rhombus-loader.gif"
         });
+        
     // mengambil judul lagu antrian
     if (nameQueue.length === 0) {
-        msg.setDescription("Tidak ada antrian lagu");
+        const msgEmptry = new EmbedBuilder()
+            .setAuthor({
+                name: "Daftar antrian musik bot sensei",
+                iconURL: "https://img.icons8.com/color/2x/rhombus-loader.gif"
+            })
+            .setDescription("Tidak ada antrian lagu");
+        return interaction.reply({
+            ephemeral: true,
+            embeds: [ msgEmptry ]
+        });
     }
     else {
         for (let i = 0; i < nameQueue.length; i++)
@@ -45,8 +53,6 @@ export default command(meta, ({ interaction, client }) => {
     }
 
     interaction.reply({
-        embeds: [
-            msg
-        ]
-    })
+        embeds: [ msg ]
+    });
 });

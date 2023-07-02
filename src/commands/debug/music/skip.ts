@@ -5,8 +5,6 @@ import {
 import {
     AudioPlayerStatus,
     getVoiceConnection,
-    createAudioPlayer,
-    NoSubscriberBehavior,
     VoiceConnectionStatus,
 } from '@discordjs/voice'
 import { command } from '../../../utils'
@@ -37,15 +35,7 @@ export default command(
         }
 
         // Periksa apakah bot berada di voice channel yang sama dengan pengguna
-        
-
-        // skip lagu saat ini
         const connection = getVoiceConnection(guildId);
-        const player = createAudioPlayer({
-            behaviors: {
-                noSubscriber: NoSubscriberBehavior.Pause,
-            },
-        });
         if (!connection) {
             const msg = new EmbedBuilder()
                 .setDescription("Sensei-bot tidak ada di dalam voice channel ini! :negative_squared_cross_mark:")
@@ -57,21 +47,46 @@ export default command(
             });
         }
 
+        // skip lagu saat ini
         if (connection.state.status === VoiceConnectionStatus.Ready){
-            queue.shift();
-            numQueue.shift();
-            nameQueue.shift();
-            connection.disconnect();
+            if(queue.length === 0) {
+                const message = new EmbedBuilder()
+                    .setDescription("Tidak ada antrian lagu");
+                
+                return interaction.reply({
+                    ephemeral: true,
+                    embeds: [ message ]
+                });
+                
+            } else {
+                const subscription = connection.state.subscription;
+                if (subscription) {
+                    queue.shift();
+                    numQueue.shift();
+                    nameQueue.shift();
+                    subscription.player.stop();
+                    // connection.disconnect();
+                    
+                    const message = new EmbedBuilder()
+                        .setDescription("Skip musik :white_check_mark:")
+                        .setColor("Random");
+
+                    interaction.reply({
+                        fetchReply: true,
+                        embeds: [ message ]
+                    });
+
+                } else {
+                    const message = new EmbedBuilder()
+                        .setDescription("Tidak ada antrian lagu");
+                    
+                    return interaction.reply({
+                        ephemeral: true,
+                        embeds: [ message ]
+                    });
+                }
+            }
         }
-
-        const message = new EmbedBuilder()
-            .setDescription("Skip musik :white_check_mark:")
-            .setColor("Random");
-
-        interaction.reply({
-            fetchReply: true,
-            embeds: [ message ]
-        });
 
     } catch(e) {
         console.error(`Something went error in skip.ts ${e}`);

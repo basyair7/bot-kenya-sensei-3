@@ -4,6 +4,7 @@ import {
 } from "discord.js";
 import { 
     DiscordGatewayAdapterCreator,
+    getVoiceConnection,
     joinVoiceChannel, 
     createAudioPlayer,
     createAudioResource,
@@ -115,14 +116,14 @@ async function playAudio(config: any, data: any, interaction: any) {
         const {user} = interaction
 
         connection.on(VoiceConnectionStatus.Disconnected, async () => {
-            // await StopMusic(interaction, connection);
             if (queue.length === 0) {
                 isPlaying = false;
                 queue.splice(0, queue.length);
                 numQueue.splice(0, numQueue.length);
                 nameQueue.splice(0, nameQueue.length);
                 await StopMusic(interaction, connection);
-            } else {
+            } 
+            else {
                 if(connection.state.status === VoiceConnectionStatus.Disconnected) {
                     playAudio(config, queue[0], interaction);
                 }
@@ -130,7 +131,6 @@ async function playAudio(config: any, data: any, interaction: any) {
         });
 
         const message = new EmbedBuilder()
-            // .setTitle("Memutar musik")
             .setAuthor({
                 name: "Memutar musik",
                 iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
@@ -148,7 +148,7 @@ async function playAudio(config: any, data: any, interaction: any) {
             .setImage(thumbnail)
             .setColor("#F93CCA");
 
-        await interaction.channel?.send({
+        interaction.editReply({
             embeds: [ message ]
         });
         
