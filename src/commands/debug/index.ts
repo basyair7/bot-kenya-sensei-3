@@ -8,25 +8,19 @@ import google from './google';
 import help from './help';
 // import uptime from './uptime';
 import join from './join';
+import left from './left';
 import play from './music/play';
 import stop from './music/stop';
 import queue from './music/queue';
 import skip from './music/skip';
-import left from './left';
+import nowplay from './music/nowplay';
 
 export default category('Debug', [
-  ping,
-  stats,
-  mukaku,
-  says,
-  servericon,
-  google,
+  ping, stats, mukaku,
+  says, servericon, google,
   help,
   // uptime,
-  join,
-  left,
-  play,
-  stop,
-  queue,
-  skip,
-])
+  join, left, play,
+  stop, queue, skip,
+  nowplay,
+]);

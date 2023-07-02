@@ -108,7 +108,7 @@ async function playAudio(config: any, data: any, interaction: any) {
         const duration = data["duration"];
         const thumbnail = data["image"];
         const URLYt = data["url"];
-        const {user} = interaction
+        const user = data["requested"];
 
         connection.on(VoiceConnectionStatus.Disconnected, async () => {
             if (queue.length === 0) {
@@ -120,6 +120,7 @@ async function playAudio(config: any, data: any, interaction: any) {
             } 
             else {
                 if(connection.state.status === VoiceConnectionStatus.Disconnected) {
+                    connection.destroy();
                     await playAudio(config, queue[0], interaction);
                 }
             }
@@ -134,7 +135,7 @@ async function playAudio(config: any, data: any, interaction: any) {
             .setFields({
                 name: "Durasi", value: duration, inline: true
             }, {
-                name: "Request", value: user.tag
+                name: "Request", value: user
             }, {
                 name: "positioned", value: `${numQueue.length.toString()} in the queue`
             }, {
@@ -155,6 +156,7 @@ async function playAudio(config: any, data: any, interaction: any) {
                     queue.shift();
                     numQueue.shift();
                     nameQueue.shift();
+                    connection.destroy();
                     await playAudio(config, queue[0], interaction);
                 }
             });
