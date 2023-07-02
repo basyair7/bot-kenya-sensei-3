@@ -76,13 +76,17 @@ async function StopMusic(interaction: any, connection: any){
     if(queue.length === 0){
         // Disconnect dari channel
         isPlaying = false;
-        interaction.editReply({
-            content: "Musik telah berhenti! :white_check_mark:"
-        })
+        const msg = new EmbedBuilder()
+            .setAuthor({
+                name: "Memutar musik",
+                iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
+            })
+            .setDescription("Musik telah berhenti! :white_check_mark:");
+
+        interaction.followUp({
+            embeds: [ msg ]
+        });
         connection.disconnect();
-        // if(minute%10 === 0) {
-        //     connection.destroy();
-        // }
     }
 }
 
@@ -116,11 +120,10 @@ async function playAudio(config: any, data: any, interaction: any) {
                 queue.splice(0, queue.length);
                 numQueue.splice(0, numQueue.length);
                 nameQueue.splice(0, nameQueue.length);
-                await StopMusic(interaction, connection);
+                StopMusic(interaction, connection);
             } 
             else {
                 if(connection.state.status === VoiceConnectionStatus.Disconnected) {
-                    connection.destroy();
                     await playAudio(config, queue[0], interaction);
                 }
             }
@@ -156,7 +159,6 @@ async function playAudio(config: any, data: any, interaction: any) {
                     queue.shift();
                     numQueue.shift();
                     nameQueue.shift();
-                    connection.destroy();
                     await playAudio(config, queue[0], interaction);
                 }
             });
@@ -178,7 +180,7 @@ async function playAudio(config: any, data: any, interaction: any) {
         if (player.state.status === AudioPlayerStatus.Idle 
             && connection.state.status === VoiceConnectionStatus.Ready)
         {
-            await StopMusic(interaction, connection);
+            StopMusic(interaction, connection);
         }
     }
 }
