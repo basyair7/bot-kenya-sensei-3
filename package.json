@@ -6,8 +6,9 @@
     "main": "src/index.ts",
     "scripts": {
         "build": "tsc",
-        "start": "pm2 start dist/index.js",
-        "startnormal": "nodemon --config nodemon.js src/index.ts",
+        "startpm2": "pm2 start dist/index.js",
+        "start": "nodemon --config nodemon.js src/index.ts",
+        "startjs": "nodemon dist/index.js",
         "dev": "nodemon --config nodemon.js src/index.ts",
         "deploy": "cross-env IS_SCRIPT=true ts-node src/scripts/deploy",
         "deploy-prod": "cross-env NODE_ENV=production npm run deploy",

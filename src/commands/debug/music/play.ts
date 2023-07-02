@@ -31,10 +31,11 @@ async function addToQueue(config: any, query: any, interaction: any) {
             requested: interaction.user.tag,
             videoId: data.videoId,
             duration: data.duration.toString(),
+            image: data.image,
             url: data.url
         };
 
-        queue.push(song.url);
+        queue.push(song);
         numQueue.push(queue.length.toString());
         nameQueue.push(song.name);
 
@@ -57,7 +58,7 @@ async function addToQueue(config: any, query: any, interaction: any) {
                 name: "url", value: song.url
             });
 
-        await interaction.editReply({
+        interaction.editReply({
             embeds: [
                 message
             ]
@@ -91,7 +92,7 @@ async function StopMusic(interaction: any, connection: any){
     }
 }
 
-async function playAudio(config: any, url: string, interaction: any) {
+async function playAudio(config: any, data: any, interaction: any) {
     // buat object joinVoiceChannel
     const connection = joinVoiceChannel({
         channelId: config.channelID!,
@@ -109,12 +110,10 @@ async function playAudio(config: any, url: string, interaction: any) {
 
     try {
         // ambil informasi lagu
-        const fetched = (await search(url)).videos;
-        const data = fetched[0];
-        const title = data.title;
-        const duration = data.duration.toString();
-        const thumbnail = data.image;
-        const URLYt = data.url;
+        const title = data["name"];
+        const duration = data["duration"];
+        const thumbnail = data["image"];
+        const URLYt = data["url"];
         const {user} = interaction
 
         connection.on(VoiceConnectionStatus.Disconnected, async () => {
@@ -163,7 +162,7 @@ async function playAudio(config: any, url: string, interaction: any) {
         player.on('error', (err) =>{ return console.error(`Ada yang error pada program play.ts ${err}`);});
         
         connection.subscribe(player);
-        const stream = ytdl(url, { filter: 'audioonly' });
+        const stream = ytdl(URLYt, { filter: 'audioonly' });
         const res = createAudioResource(stream);
         player.play(res);
     
@@ -234,7 +233,7 @@ export default command(meta, async ({interaction, client}) => {
                 embeds: [ msgError ]
             });
         }
-        interaction.reply({
+        await interaction.reply({
             content: `Play music ${query} :notes:`,
             fetchReply: true
         });
