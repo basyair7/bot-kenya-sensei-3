@@ -159,7 +159,6 @@ async function playAudio(config: any, data: any, interaction: any) {
                     && connection.state.status === VoiceConnectionStatus.Ready)
                 {
                     queue.shift();
-                    numQueue.shift();
                     nameQueue.shift();
                     connection.disconnect();
                     // await playAudio(config, queue[0], interaction);
