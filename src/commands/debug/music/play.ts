@@ -22,7 +22,6 @@ let isPlaying = false;
 var song;
 
 async function addToQueue(config: any, query: any, interaction: any) {
-    // if (!interaction.isCommand()) return console.log("Interaksi tidak dikenal");
     // proses memasukan data lagu antrian
     try {
         const data = query;
@@ -41,7 +40,6 @@ async function addToQueue(config: any, query: any, interaction: any) {
         nameQueue.push(song.name);
 
         const message = new EmbedBuilder()
-            // .setTitle("Tambah antrian musik")
             .setAuthor({
                 name: "Tambah antrian musik",
                 iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
@@ -61,7 +59,7 @@ async function addToQueue(config: any, query: any, interaction: any) {
 
         interaction.editReply({
             embeds: [ message ]
-        })
+        });
         if(!isPlaying){
             await playAudio(config, queue[0], interaction);
         }
@@ -74,9 +72,6 @@ async function addToQueue(config: any, query: any, interaction: any) {
 }
 
 async function StopMusic(interaction: any, connection: any){
-    // var local = DateTime.now();
-    // var rezonedString = local.setZone("Asia/Jakarta");
-    // let minute = rezonedString.second;
     // cek jika antrian sudah habis maka bot berhenti memutarkan musik
     if(queue.length === 0){
         // Disconnect dari channel
@@ -148,7 +143,7 @@ async function playAudio(config: any, data: any, interaction: any) {
             .setImage(thumbnail)
             .setColor("#F93CCA");
 
-        interaction.editReply({
+        interaction.followUp({
             embeds: [ message ]
         });
         
@@ -178,7 +173,6 @@ async function playAudio(config: any, data: any, interaction: any) {
         });
     
     } catch(err) {
-        // console.error(err);
         if (player.state.status === AudioPlayerStatus.Idle 
             && connection.state.status === VoiceConnectionStatus.Ready)
         {
