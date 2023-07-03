@@ -6,7 +6,7 @@ import {
 import { command } from "../../../utils";
 
 // antrian untuk lagu
-import { queue, numQueue, nameQueue } from "./constants";
+import { queue, numQueue } from "./constants";
 
 const meta = new SlashCommandBuilder()
     .setName("nowplay")

@@ -17,7 +17,7 @@ import { search } from "yt-search";
 import { command } from "../../../utils";
 
 // antrian untuk lagu
-import { queue, numQueue, nameQueue, loopState } from "./constants";
+import { queue, numQueue, loopState } from "./constants";
 let isPlaying = false;
 var song;
 
@@ -36,7 +36,6 @@ async function addToQueue(config: any, query: any, interaction: any) {
         };
 
         queue.push(song);
-        nameQueue.push(song.name);
 
         const message = new EmbedBuilder()
             .setAuthor({
@@ -65,7 +64,6 @@ async function addToQueue(config: any, query: any, interaction: any) {
     } catch(e) {
         queue.splice(0, queue.length);
         numQueue.splice(0, numQueue.length);
-        nameQueue.splice(0, nameQueue.length);
         console.error(e);
     }
 }
@@ -164,9 +162,12 @@ async function playAudio(config: any, data: any, interaction: any) {
                 {
                     if(loopState[0] === false) {
                         queue.shift();
-                        nameQueue.shift();
                         connection.disconnect();
-                    } else { connection.disconnect(); }
+                    } else { 
+                        queue.push(queue[0]);
+                        queue.shift();
+                        connection.disconnect();
+                    }
                     // await playAudio(config, queue[0], interaction);
                 }
             });
@@ -177,7 +178,6 @@ async function playAudio(config: any, data: any, interaction: any) {
                 isPlaying = false;
                 queue.splice(0, queue.length);
                 numQueue.splice(0, numQueue.length);
-                nameQueue.splice(0, nameQueue.length);
                 StopMusic(interaction, connection);
             } 
             else {

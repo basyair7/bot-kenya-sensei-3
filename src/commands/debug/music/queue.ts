@@ -3,7 +3,7 @@ import {
     EmbedBuilder,
 } from "discord.js";
 import { command } from "../../../utils";
-import { nameQueue, numQueue, queue } from "./constants";
+import { queue } from "./constants";
 
 const meta = new SlashCommandBuilder()
     .setName("queue")
@@ -30,7 +30,7 @@ export default command(meta, ({ interaction, client }) => {
         });
         
     // mengambil judul lagu antrian
-    if (nameQueue.length === 0) {
+    if (queue.length === 0) {
         const msgEmptry = new EmbedBuilder()
             .setAuthor({
                 name: "Daftar antrian musik bot sensei",
@@ -43,11 +43,11 @@ export default command(meta, ({ interaction, client }) => {
         });
     }
     else {
-        for (let i = 0; i < nameQueue.length; i++)
+        for (let i = 0; i < queue.length; i++)
         {
             let number = i+1;
             msg.addFields({ 
-                name: `${number.toString()}. ${nameQueue[i]}`, value: `${queue[i]["url"]}` 
+                name: `${number.toString()}. ${queue[i]["name"]}`, value: `${queue[i]["url"]}` 
             });
         }
     }

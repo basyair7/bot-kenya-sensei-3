@@ -8,7 +8,7 @@ import {
     DiscordGatewayAdapterCreator,
     getVoiceConnection
 } from "@discordjs/voice";
-import { queue, numQueue, nameQueue } from "./constants";
+import { queue, numQueue } from "./constants";
 
 import { command } from "../../../utils";
 
@@ -54,7 +54,6 @@ export default command(meta, ({interaction, client}) => {
     } else {
         queue.splice(0, queue.length);
         numQueue.splice(0, numQueue.length);
-        nameQueue.splice(0, nameQueue.length);
         voiceConnection.disconnect();
         // voiceConnection.destroy();
         const message = new EmbedBuilder()

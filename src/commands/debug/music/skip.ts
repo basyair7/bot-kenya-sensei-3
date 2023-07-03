@@ -8,7 +8,7 @@ import {
     VoiceConnectionStatus,
 } from '@discordjs/voice'
 import { command } from '../../../utils'
-import { queue, numQueue, nameQueue } from './constants'
+import { queue, } from './constants'
 
 const meta = new SlashCommandBuilder()
     .setName("skip")
@@ -60,8 +60,6 @@ export default command(
                 
             } else {
                 queue.shift();
-                // numQueue.shift();
-                nameQueue.shift();
                 connection.disconnect();
                 
                 const message = new EmbedBuilder()
