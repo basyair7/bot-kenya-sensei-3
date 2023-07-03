@@ -18,19 +18,22 @@ const meta = new SlashCommandBuilder()
 
 // execute program
 export default command(meta, async ({ interaction, client }) => {
+    let state;
     const bool = await interaction.options.getBoolean("boolean_opsi");
     if (bool) {
         loopState[0] = true;
+        state = "Enabled";
     }
     else {
         loopState[0] = false;
+        state = "Disabled";
     }
     const msg = new EmbedBuilder()
         .setAuthor({
             name: "Music Loop Controller",
             iconURL: "https://img.icons8.com/color/2x/refresh--v2.gif"
         })
-        .setDescription(`Loop is ${(bool == true? " Enabled " : " Disabled ")} for current song :white_check_mark:`)
+        .setDescription(`Loop is ${state} for current song :white_check_mark:`)
         .setColor("Blue");
     
     return await interaction.reply({ fetchReply: true, embeds: [ msg ]});
