@@ -8,7 +8,7 @@ import {
     DiscordGatewayAdapterCreator,
     getVoiceConnection
 } from "@discordjs/voice";
-import { queue, numQueue } from "./constants";
+import { queue, numQueue, loopState } from "./constants";
 
 import { command } from "../../../utils";
 
@@ -52,6 +52,7 @@ export default command(meta, ({interaction, client}) => {
         });
 
     } else {
+        loopState[0] = false;
         queue.splice(0, queue.length);
         numQueue.splice(0, numQueue.length);
         voiceConnection.disconnect();
