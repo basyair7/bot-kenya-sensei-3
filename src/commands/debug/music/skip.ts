@@ -8,7 +8,7 @@ import {
     VoiceConnectionStatus,
 } from '@discordjs/voice'
 import { command } from '../../../utils'
-import { queue, } from './constants'
+import { queue, loopState } from './constants'
 
 const meta = new SlashCommandBuilder()
     .setName("skip")
@@ -59,8 +59,14 @@ export default command(
                 });
                 
             } else {
-                queue.shift();
-                connection.disconnect();
+                if (loopState[0] === true) {
+                    queue.push(queue[0]);
+                    queue.shift();
+                    connection.disconnect();
+                } else {
+                    queue.shift();
+                    connection.disconnect();
+                }
                 
                 const message = new EmbedBuilder()
                     .setDescription("Skip musik :white_check_mark:")
