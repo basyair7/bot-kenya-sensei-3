@@ -94,22 +94,20 @@ async function StopMusic(interaction: any, connection: any){
 }
 
 async function playAudio(config: any, data: any, interaction: any) {
-    // buat object joinVoiceChannel
-    const connection = joinVoiceChannel({
-        channelId: config.channelID!,
-        guildId: config.guildID!,
-        adapterCreator: interaction.guild?.voiceAdapterCreator as DiscordGatewayAdapterCreator
-    });
-
-    // buat object createAudio
-    const player = createAudioPlayer({
-        behaviors: {
-            noSubscriber: NoSubscriberBehavior.Pause,
-        },
-    });
     isPlaying = true;
-
     try {
+        // buat object joinVoiceChannel
+        const connection = joinVoiceChannel({
+            channelId: config.channelID!,
+            guildId: config.guildID!,
+            adapterCreator: interaction.guild?.voiceAdapterCreator as DiscordGatewayAdapterCreator
+        });
+        // buat object createAudio
+        const player = createAudioPlayer({
+            behaviors: {
+                noSubscriber: NoSubscriberBehavior.Pause,
+            },
+        });
         // ambil informasi lagu
         const title = data["name"];
         const duration = data["duration"];
@@ -166,6 +164,7 @@ async function playAudio(config: any, data: any, interaction: any) {
                     } else { 
                         queue.push(queue[0]);
                         queue.shift();
+                        numQueue.shift();
                         connection.disconnect();
                     }
                     // await playAudio(config, queue[0], interaction);
@@ -188,10 +187,9 @@ async function playAudio(config: any, data: any, interaction: any) {
         });
     
     } catch(err) {
-        if (player.state.status === AudioPlayerStatus.Idle 
-            && connection.state.status === VoiceConnectionStatus.Ready)
-        {
-            StopMusic(interaction, connection);
+        console.log(`Something went wrong in playAudioMain ${err}`);
+        if(queue.length !== 0) {
+            await playAudio(config, queue[0], interaction);
         }
     }
 }
