@@ -14,6 +14,7 @@ import stop from './music/stop';
 import queue from './music/queue';
 import skip from './music/skip';
 import nowplay from './music/nowplay';
+import loop from './music/loop';
 
 export default category('Debug', [
   ping, stats, mukaku,
@@ -22,5 +23,5 @@ export default category('Debug', [
   // uptime,
   join, left, play,
   stop, queue, skip,
-  nowplay,
+  nowplay, loop,
 ]);

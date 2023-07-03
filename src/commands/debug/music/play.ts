@@ -17,7 +17,7 @@ import { search } from "yt-search";
 import { command } from "../../../utils";
 
 // antrian untuk lagu
-import { queue, numQueue, nameQueue } from "./constants";
+import { queue, numQueue, nameQueue, loopState } from "./constants";
 let isPlaying = false;
 var song;
 
@@ -143,7 +143,15 @@ async function playAudio(config: any, data: any, interaction: any) {
         });
         
         connection.on(VoiceConnectionStatus.Ready, async () => {
-            player.on('error', (err) =>{ return console.error(`Ada yang error pada program play.ts ${err}`);});
+            player.on('error', async (err) =>{ 
+                console.error(`Ada yang error pada program play.ts ${err}`);
+                if(queue.length !== 0) {
+                    return await playAudio(config, queue[0], interaction);
+                }
+                else {
+                    connection.disconnect();
+                }
+            });
             
             connection.subscribe(player);
             const stream = ytdl(URLYt, { filter: "audioonly" });
@@ -154,9 +162,11 @@ async function playAudio(config: any, data: any, interaction: any) {
                 if (player.state.status === AudioPlayerStatus.Idle 
                     && connection.state.status === VoiceConnectionStatus.Ready)
                 {
-                    queue.shift();
-                    nameQueue.shift();
-                    connection.disconnect();
+                    if(loopState[0] === false) {
+                        queue.shift();
+                        nameQueue.shift();
+                        connection.disconnect();
+                    } else { connection.disconnect(); }
                     // await playAudio(config, queue[0], interaction);
                 }
             });
