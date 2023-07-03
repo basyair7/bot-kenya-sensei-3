@@ -33,6 +33,6 @@ export default command(meta, async ({ interaction, client }) => {
         .setDescription(`Loop is ${(bool == true? " Enabled " : " Disabled ")} for current song :white_check_mark:`)
         .setColor("Blue");
     
-    return interaction.reply({ fetchReply: true, embeds: [ msg ]});
+    return await interaction.reply({ fetchReply: true, embeds: [ msg ]});
 
 });
