@@ -59,7 +59,7 @@ async function addToQueue(config: any, query: any, interaction: any) {
         interaction.editReply({
             embeds: [ message ]
         });
-        if(!isPlaying){
+        if(isPlaying === false){
             await playAudio(config, queue[0], interaction);
         }
     } catch(e) {
@@ -146,11 +146,7 @@ async function playAudio(config: any, data: any, interaction: any) {
             player.on('error', (err) =>{ return console.error(`Ada yang error pada program play.ts ${err}`);});
             
             connection.subscribe(player);
-            const stream = ytdl(URLYt, { 
-                filter: "audioonly",
-                quality: "highestaudio",
-                highWaterMark: 1 << 25,
-            });
+            const stream = ytdl(URLYt, { filter: "audioonly" });
             const res = createAudioResource(stream);
             player.play(res);
 
@@ -176,7 +172,7 @@ async function playAudio(config: any, data: any, interaction: any) {
             } 
             else {
                 if(connection.state.status === VoiceConnectionStatus.Disconnected) {
-                    await playAudio(config, queue[0], interaction);
+                    playAudio(config, queue[0], interaction);
                 }
             }
         });
