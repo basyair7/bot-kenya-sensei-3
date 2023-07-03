@@ -18,7 +18,7 @@ const meta = new SlashCommandBuilder()
 
 // execute program
 export default command(meta, async ({ interaction, client }) => {
-    const bool = interaction.options.getBoolean("boolean_opsi");
+    const bool = await interaction.options.getBoolean("boolean_opsi");
     if (bool) {
         loopState[0] = true;
     }
