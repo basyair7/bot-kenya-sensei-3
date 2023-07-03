@@ -82,7 +82,7 @@ async function StopMusic(interaction: any, connection: any){
                 .setDescription("Musik telah berhenti! :white_check_mark:");
                 
             // connection.disconnect();
-            connection.destroy();
+            // connection.destroy();
             
             return interaction.followUp({
                 embeds: [ msg ]
