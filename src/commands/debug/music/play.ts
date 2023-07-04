@@ -10,33 +10,48 @@ import {
     createAudioResource,
     NoSubscriberBehavior,
     AudioPlayerStatus,
-    VoiceConnectionStatus
+    VoiceConnectionStatus,
+    StreamType
 } from "@discordjs/voice";
 import ytdl from "ytdl-core";
 import { search } from "yt-search";
+import SpotifyWebApi from "spotify-web-api-node";
+import keys from "../../../keys";
 import { command } from "../../../utils";
+
 
 // antrian untuk lagu
 import { queue, numQueue, loopState } from "./constants";
 let isPlaying = false;
 var song;
 
-async function addToQueue(config: any, query: any, interaction: any) {
+async function addToQueue(config: any, query: any, interaction: any, source: string) {
     // proses memasukan data lagu antrian
     try {
         const data = query;
-        song = {
-            name: data.title,
-            thumbnail: data.image,
-            requested: interaction.user.tag,
-            videoId: data.videoId,
-            duration: data.duration.toString(),
-            image: data.image,
-            url: data.url
-        };
+        if (source === "youtube") {
+            song = {
+                name: data.title,
+                thumbnail: data.image,
+                requested: interaction.user.tag,
+                duration: data.duration.toString(),
+                image: data.image,
+                url: data.url,
+                source: "youtube"
+            };
+        } else {
+            song = {
+                name: data.title,
+                thumbnail: data.image,
+                requested: interaction.user.tag,
+                duration: data.duration,
+                image: data.image,
+                url: data.url,
+                source: "spotify"
+            };
+        }
 
         queue.push(song);
-
         const message = new EmbedBuilder()
             .setAuthor({
                 name: "Tambah antrian musik",
@@ -61,6 +76,46 @@ async function addToQueue(config: any, query: any, interaction: any) {
         if(isPlaying === false){
             await playAudio(config, queue[0], interaction);
         }
+
+        // if (source === "spotify") {
+        //     const data = query
+        //     song = {
+        //         name: data.name,
+        //         image: data.image,
+        //         requested: interaction.user.tag,
+        //         duration: data.duration,
+        //         source: "spotify",
+        //         url: data.url
+        //     };
+
+        //     queue.push(song);
+
+        //     const message = new EmbedBuilder()
+        //         .setAuthor({
+        //             name: "Tambah antrian musik",
+        //             iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
+        //         })
+        //         .setDescription(`${song.name}`)
+        //         .setColor("#F93CCA")
+        //         .addFields({
+        //             name: "durasi", value: song.duration, inline: true
+        //         },{
+        //             name: "requested by", value: song.requested, inline: false
+        //         })
+        //         .addFields({
+        //             name: "positioned", value: `${queue.length.toString()} in the queue`, inline: true
+        //         }, {
+        //             name: "url", value: song.url
+        //         });
+
+        //         interaction.editReply({
+        //             embeds: [ message ]
+        //         });
+        //         if(isPlaying === false){
+        //             await playAudio(config, queue[0], interaction);
+        //         }
+        // }
+
     } catch(e) {
         queue.splice(0, queue.length);
         numQueue.splice(0, numQueue.length);
@@ -108,12 +163,14 @@ async function playAudio(config: any, data: any, interaction: any) {
                 noSubscriber: NoSubscriberBehavior.Pause,
             },
         });
+
         // ambil informasi lagu
         const title = data["name"];
         const duration = data["duration"];
         const thumbnail = data["image"];
-        const URLYt = data["url"];
+        const URL = data["url"];
         const user = data["requested"];
+        const source = data["source"];
         numQueue.push(queue.length.toString());
 
         const message = new EmbedBuilder()
@@ -129,7 +186,7 @@ async function playAudio(config: any, data: any, interaction: any) {
             }, {
                 name: "positioned", value: `${numQueue.length.toString()} in the queue`
             }, {
-                name: "URL", value: URLYt
+                name: "URL", value: URL
             })
             .setImage(thumbnail)
             .setColor("#F93CCA");
@@ -139,20 +196,29 @@ async function playAudio(config: any, data: any, interaction: any) {
         });
         
         connection.on(VoiceConnectionStatus.Ready, async () => {
+            if (source === "youtube") {
+                const stream = ytdl(URL, { filter: "audioonly" });
+                const res = createAudioResource(stream);
+                player.play(res);
+                connection.subscribe(player);
+            }
+            if (source === "spotify") {
+                const spotifyToYoutube = `https://www.youtube.com/watch?v=${URL}`
+                const stream = ytdl(spotifyToYoutube, { filter: "audioonly" });
+                const res = createAudioResource(stream, { inputType: StreamType.Arbitrary });
+                player.play(res);
+                connection.subscribe(player);
+            }
+
             player.on('error', async (err) =>{ 
                 console.error(`Ada yang error pada program play.ts ${err}`);
-                if(queue.length !== 0) {
-                    return await playAudio(config, queue[0], interaction);
+                if(queue.length === 0) {
+                    connection.destroy();
                 }
                 else {
-                    connection.disconnect();
+                    return await playAudio(config, queue[0], interaction);
                 }
             });
-            
-            connection.subscribe(player);
-            const stream = ytdl(URLYt, { filter: "audioonly" });
-            const res = createAudioResource(stream);
-            player.play(res);
 
             player.on(AudioPlayerStatus.Idle, async () => {
                 if (player.state.status === AudioPlayerStatus.Idle 
@@ -199,25 +265,24 @@ const meta = new SlashCommandBuilder()
     .setDescription("Loads a single song from url youtube")
     .addStringOption((option)=>
         option
-            .setName("ytquery")
-            .setDescription("Masukan nama/url yang ingin di mainkan")
-            .setRequired(true)
-            .setMinLength(1)
-            .setMaxLength(2000)
-    )
-    .addStringOption((option) => 
-        option
-            .setName("spotifyquery")
+            .setName("youtube")
             .setDescription("Masukan nama/url yang ingin di mainkan")
             .setRequired(false)
             .setMinLength(1)
             .setMaxLength(2000)
-    );
+    )
+    // .addStringOption((option) => 
+    //     option
+    //         .setName("spotify")
+    //         .setDescription("Masukan nama/url yang ingin di mainkan")
+    //         .setRequired(false)
+    //         .setMinLength(1)
+    //         .setMaxLength(2000)
+    // );
 
 export default command(meta, async ({interaction, client}) => {
     try {
         //  ambil data user (query, id user, id member, id guild dan id channel)
-        const query = interaction.options.getString('ytquery') as string;
         const users = client.guilds.cache.get(interaction.guild?.id!);
         const member = users?.members.cache.get(interaction.user.id);
         const guildId = interaction.guild?.id;
@@ -234,38 +299,88 @@ export default command(meta, async ({interaction, client}) => {
             });
         }
 
-        await interaction.reply({
-            content: `Play music ${query} :notes:`,
-            fetchReply: true
-        });
+        const ytquery = interaction.options.getString('youtube') as string;
+        const spotifyquery = interaction.options.getString('spotify') as string;
+        if(ytquery === "" || ytquery === undefined || ytquery === null) 
+        {
+            if(spotifyquery === "" || spotifyquery === undefined || spotifyquery === null) {
+                return interaction.reply({ ephemeral: true, content: "tidak ada lagu yang diputar"});
+            }
 
-        // masukan konfigurasi id
-        var config = {
-            channelID: channelId,
-            guildID: guildId
-        };
-
-        // melakukan pencarian lagu
-        const searchResult = (await search(query)).videos;
-        if(searchResult.length === 0 || !searchResult) {
-            return interaction.editReply({
-                content: "I couldn't find the song you request! :negative_squared_cross_mark:"
+            await interaction.reply({
+                content: `Play music ${spotifyquery} :notes:`,
+                fetchReply: true
             });
-        }
-
-        const video = searchResult[0];
-        if (!video){
-            const msgError = new EmbedBuilder()
-                .setDescription(`Tidak ditemukan lagu ${query}`)
-                .setColor("Red");
+            const spotifyApi = new SpotifyWebApi({
+                clientId: keys.spotifyClientId,
+                clientSecret: keys.spotifySecret,
+                redirectUri: 'http://localhost:3000/callback'
+            });
+            var configSpotify = {
+                channelId: channelId,
+                guildId: guildId
+            };
+            spotifyApi.setAccessToken(keys.spotifyToken);
             
-            return interaction.editReply({
-                embeds: [ msgError ]
-            });
-        }
+            const searchTrack = await spotifyApi.searchTracks(spotifyquery);
+            const tracks = searchTrack.body.tracks!.items;
+            const URLReal = tracks[0].uri
+            if(tracks.length === 0) {
+                return interaction.editReply({ 
+                    content: "I couldn't find the song you request! :negative_squared_cross_mark:" 
+                });
+            }
+            // konversi durasi
+            const trackDurationMinutes = Math.floor(tracks[0].duration_ms / 60000);
+            const trackDurationSeconds = Math.floor((tracks[0].duration_ms % 60000) / 1000);
+            const trackDurationFormatted = `${trackDurationMinutes}:${trackDurationSeconds.toString().padStart(2, '0')}`;
 
-        // masukan ke antrian
-        await addToQueue(config, video, interaction);
+            // masukan ke info lagu
+            var info = {
+                id: tracks[0].id,
+                title: tracks[0].name,
+                artis: tracks[0].artists[0].name,
+                album: tracks[0].album.name,
+                image: tracks[0].album.images[0].url,
+                duration: trackDurationFormatted,
+                url: URLReal
+            };
+
+            return await addToQueue(configSpotify, info, interaction, "spotify");
+        } else {
+            await interaction.reply({
+                content: `Play music ${ytquery} :notes:`,
+                fetchReply: true
+            });
+    
+            // masukan konfigurasi id
+            var config = {
+                channelID: channelId,
+                guildID: guildId
+            };
+    
+            // melakukan pencarian lagu
+            const searchResult = (await search(ytquery)).videos;
+            if(searchResult.length === 0 || !searchResult) {
+                return await interaction.editReply({
+                    content: "I couldn't find the song you request! :negative_squared_cross_mark:"
+                });
+            }
+    
+            const video = searchResult[0];
+            if (!video){
+                const msgError = new EmbedBuilder()
+                    .setDescription(`Tidak ditemukan lagu ${ytquery}`)
+                    .setColor("Red");
+                
+                return await interaction.editReply({
+                    embeds: [ msgError ]
+                });
+            }
+    
+            // masukan ke antrian
+            return await addToQueue(config, video, interaction, "youtube");
+        }
     
     } catch(err) {
         console.error(`Something went error in play.ts : ${err}`);
