@@ -139,7 +139,7 @@ async function StopMusic(interaction: any, connection: any){
             // connection.disconnect();
             // connection.destroy();
             
-            return interaction.followUp({
+            return interaction.channel?.send({
                 embeds: [ msg ]
             });
         }
@@ -191,13 +191,13 @@ async function playAudio(config: any, data: any, interaction: any) {
             .setImage(thumbnail)
             .setColor("#F93CCA");
 
-        interaction.followUp({
+        interaction.channel?.send({
             embeds: [ message ]
         });
         
         connection.on(VoiceConnectionStatus.Ready, async () => {
             if (source === "youtube") {
-                const stream = ytdl(URL, { filter: "audioonly" });
+                const stream = await ytdl(URL, { filter: "audioonly" });
                 const res = createAudioResource(stream);
                 player.play(res);
                 connection.subscribe(player);
@@ -233,7 +233,6 @@ async function playAudio(config: any, data: any, interaction: any) {
                         numQueue.shift();
                         connection.disconnect();
                     }
-                    // await playAudio(config, queue[0], interaction);
                 }
             });
         });
@@ -243,20 +242,16 @@ async function playAudio(config: any, data: any, interaction: any) {
                 isPlaying = false;
                 queue.splice(0, queue.length);
                 numQueue.splice(0, numQueue.length);
-                StopMusic(interaction, connection);
+                return await StopMusic(interaction, connection);
             } 
-            else {
-                if(connection.state.status === VoiceConnectionStatus.Disconnected) {
-                    playAudio(config, queue[0], interaction);
-                }
+            if(connection.state.status === VoiceConnectionStatus.Disconnected) {
+                return await playAudio(config, queue[0], interaction);
             }
         });
     
     } catch(err) {
         console.log(`Something went wrong in playAudioMain ${err}`);
-        if(queue.length !== 0) {
-            await playAudio(config, queue[0], interaction);
-        }
+        if(queue.length !== 0) await playAudio(config, queue[0], interaction);
     }
 }
 
@@ -267,7 +262,7 @@ const meta = new SlashCommandBuilder()
         option
             .setName("youtube")
             .setDescription("Masukan nama/url yang ingin di mainkan")
-            .setRequired(false)
+            .setRequired(true)
             .setMinLength(1)
             .setMaxLength(2000)
     )
