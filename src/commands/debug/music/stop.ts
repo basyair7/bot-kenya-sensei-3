@@ -28,7 +28,7 @@ export default command(meta, ({interaction, client}) => {
         return interaction.reply({
             ephemeral: true,
             embeds: [ msg ]
-        })
+        });
     }
     const voiceConnection = getVoiceConnection(guildId!);
     if (!voiceConnection) {

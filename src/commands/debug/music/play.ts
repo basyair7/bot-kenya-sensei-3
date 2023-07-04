@@ -199,9 +199,17 @@ const meta = new SlashCommandBuilder()
     .setDescription("Loads a single song from url youtube")
     .addStringOption((option)=>
         option
-            .setName("query")
+            .setName("ytquery")
             .setDescription("Masukan nama/url yang ingin di mainkan")
             .setRequired(true)
+            .setMinLength(1)
+            .setMaxLength(2000)
+    )
+    .addStringOption((option) => 
+        option
+            .setName("spotifyquery")
+            .setDescription("Masukan nama/url yang ingin di mainkan")
+            .setRequired(false)
             .setMinLength(1)
             .setMaxLength(2000)
     );
@@ -209,7 +217,7 @@ const meta = new SlashCommandBuilder()
 export default command(meta, async ({interaction, client}) => {
     try {
         //  ambil data user (query, id user, id member, id guild dan id channel)
-        const query = interaction.options.getString('query') as string;
+        const query = interaction.options.getString('ytquery') as string;
         const users = client.guilds.cache.get(interaction.guild?.id!);
         const member = users?.members.cache.get(interaction.user.id);
         const guildId = interaction.guild?.id;
