@@ -42,7 +42,7 @@ async function addToQueue(config: any, query: any, interaction: any)
         };
 
         // masukan infoSong ke dalam list query
-        query.push(infoSong);
+        queue.push(infoSong);
 
         // tampilkan informasi antrian
         const message = new EmbedBuilder()
