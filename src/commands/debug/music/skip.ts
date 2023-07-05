@@ -20,7 +20,7 @@ export default command(
     try {
         const users = client.guilds.cache.get(interaction.guild?.id!);
         const member = users?.members.cache.get(interaction.user.id);
-        const guildId = interaction.guild!.id;
+        const guildId = interaction.guild?.id!;
         const channelId = member?.voice.channelId;
 
         // jika melakukan skip tapi tidak ada di voice channel, maka
