@@ -22,6 +22,7 @@ import { command } from "../../../utils";
 
 // antrian untuk lagu
 import { queue, numQueue, loopState } from "./constants";
+import { send } from "process";
 let isPlaying = false;
 var song;
 
@@ -139,7 +140,7 @@ async function StopMusic(interaction: any, connection: any){
             // connection.disconnect();
             // connection.destroy();
             
-            return interaction.channel?.send({
+            return interaction.editReply({
                 embeds: [ msg ]
             });
         }
@@ -160,7 +161,7 @@ async function playAudio(config: any, data: any, interaction: any) {
         // buat object createAudio
         const player = createAudioPlayer({
             behaviors: {
-                noSubscriber: NoSubscriberBehavior.Pause,
+                noSubscriber: NoSubscriberBehavior.Play,
             },
         });
 

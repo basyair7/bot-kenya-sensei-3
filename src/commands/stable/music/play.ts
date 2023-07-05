@@ -115,7 +115,7 @@ async function playAudio(config: any, data: any, interaction: any)
         // buat object createAudioPlayer
         const player = createAudioPlayer({
             behaviors: {
-                noSubscriber: NoSubscriberBehavior.Pause
+                noSubscriber: NoSubscriberBehavior.Play
             }
         });
 
