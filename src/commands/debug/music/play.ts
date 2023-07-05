@@ -242,7 +242,7 @@ async function playAudio(config: any, data: any, interaction: any) {
                 isPlaying = false;
                 queue.splice(0, queue.length);
                 numQueue.splice(0, numQueue.length);
-                return await StopMusic(interaction, connection);
+                return StopMusic(interaction, connection);
             } 
             if(connection.state.status === VoiceConnectionStatus.Disconnected) {
                 return await playAudio(config, queue[0], interaction);
