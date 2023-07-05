@@ -71,9 +71,10 @@ async function addToQueue(config: any, query: any, interaction: any, source: str
                 name: "url", value: song.url
             });
 
-        interaction.editReply({
+        interaction.channel?.send({
             embeds: [ message ]
         });
+
         if(isPlaying === false){
             await playAudio(config, queue[0], interaction);
         }
@@ -130,19 +131,22 @@ async function StopMusic(interaction: any, connection: any){
         if(queue.length === 0){
             // Disconnect dari channel
             isPlaying = false;
+
+            /*
             const msg = new EmbedBuilder()
                 .setAuthor({
                     name: "Memutar musik",
                     iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
                 })
                 .setDescription("Musik telah berhenti! :white_check_mark:");
+            */
                 
             // connection.disconnect();
             // connection.destroy();
             
-            return interaction.editReply({
-                embeds: [ msg ]
-            });
+            // return interaction.editReply({
+            //     embeds: [ msg ]
+            // });
         }
     } catch(e) {
         console.error(`Something went error in StopMusic :( ${e}`);
@@ -227,27 +231,28 @@ async function playAudio(config: any, data: any, interaction: any) {
                 {
                     if(loopState[0] === false) {
                         queue.shift();
-                        connection.disconnect();
+                        // connection.disconnect();
+                        connection.destroy();
                     } else { 
                         queue.push(queue[0]);
                         queue.shift();
                         numQueue.shift();
-                        connection.disconnect();
+                        // connection.disconnect();
+                        // connection.destroy();
                     }
                 }
             });
         });
 
-        connection.on(VoiceConnectionStatus.Disconnected, async () => {
+        connection.on(VoiceConnectionStatus.Destroyed, async () => {
             if (queue.length === 0) {
                 isPlaying = false;
                 queue.splice(0, queue.length);
                 numQueue.splice(0, numQueue.length);
                 return StopMusic(interaction, connection);
             } 
-            if(connection.state.status === VoiceConnectionStatus.Disconnected) {
-                return await playAudio(config, queue[0], interaction);
-            }
+            if(connection.state.status === VoiceConnectionStatus.Disconnected 
+                || connection.state.status === VoiceConnectionStatus.Destroyed) return await playAudio(config, queue[0], interaction);
         });
     
     } catch(err) {

@@ -62,7 +62,7 @@ async function addToQueue(config: any, query: any, interaction: any)
                 name: "url", value: infoSong.url
             });
         
-        interaction.editReply({
+        interaction.channel?.send({
             embeds: [ message ]
         });
 
@@ -84,6 +84,7 @@ async function StopMusic(interaction: any, connection: any) {
         if(queue.length === 0) {
             // Disconnect bot dari voice channel
             isPlaying = false;
+            /*
             const message = new EmbedBuilder()
                 .setAuthor({
                     name: "Memutar musik",
@@ -92,6 +93,7 @@ async function StopMusic(interaction: any, connection: any) {
                 .setDescription("Musik telah berhenti! :white_check_mark:");
                 
             return interaction.channel?.send({ embeds: [ message ] });
+            */
         }
     }
     // tampilkan pesan diconsole jika terjadi error pada program
@@ -174,19 +176,19 @@ async function playAudio(config: any, data: any, interaction: any)
                 {
                     if (loopState[0] === false) {
                         queue.shift();
-                        connection.disconnect();
+                        connection.destroy();
                     } else {
                         queue.push(queue[0]);
                         queue.shift();
                         numQueue.shift();
-                        connection.disconnect();
+                        connection.destroy();
                     }
                 }
             });
 
         });
         
-        connection.on(VoiceConnectionStatus.Disconnected, async() => {          
+        connection.on(VoiceConnectionStatus.Destroyed, async() => {          
             if (queue.length === 0) {
                 isPlaying = false;
                 queue.splice(0, queue.length);

@@ -62,10 +62,12 @@ export default command(
                 if (loopState[0] === true) {
                     queue.push(queue[0]);
                     queue.shift();
-                    connection.disconnect();
+                    // connection.disconnect();
+                    connection.destroy();
                 } else {
                     queue.shift();
-                    connection.disconnect();
+                    // connection.disconnect();
+                    connection.destroy();
                 }
                 
                 const message = new EmbedBuilder()
