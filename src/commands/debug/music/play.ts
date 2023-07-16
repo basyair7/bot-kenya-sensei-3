@@ -51,9 +51,8 @@ async function addToQueue(config: any, query: any, interaction: any, source: str
                 source: "spotify"
             };
         }
-
-        queue.push(song);
-        const message = new EmbedBuilder()
+        if (queue.length !== 0) {
+            const message = new EmbedBuilder()
             .setAuthor({
                 name: "Tambah antrian musik",
                 iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
@@ -66,15 +65,17 @@ async function addToQueue(config: any, query: any, interaction: any, source: str
                 name: "requested by", value: song.requested, inline: false
             })
             .addFields({
-                name: "positioned", value: `${queue.length.toString()} in the queue`, inline: true
+                name: "positioned", value: `${(queue.length+1).toString()} in the queue`, inline: true
             }, {
                 name: "url", value: song.url
             });
 
-        interaction.channel?.send({
-            embeds: [ message ]
-        });
-
+            interaction.channel?.send({
+                embeds: [ message ]
+            });
+        }
+        
+        queue.push(song);
         if(isPlaying === false){
             await playAudio(config, queue[0], interaction);
         }

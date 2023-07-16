@@ -41,30 +41,32 @@ async function addToQueue(config: any, query: any, interaction: any)
             url: data.url,
         };
 
+        if(queue.length !== 0) {
+            // tampilkan informasi antrian
+            const message = new EmbedBuilder()
+                .setAuthor({
+                    name: "Tambah antrian musik",
+                    iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
+                })
+                .setDescription(`${infoSong.name}`)
+                .setColor("Random")
+                .addFields({
+                    name: "durasi", value: infoSong.duration, inline: true
+                }, {
+                    name: "requested by", value: infoSong.requested, inline: true
+                }, {
+                    name: "positioned", value: `${(queue.length+1).toString()} in the queue`, inline: true
+                }, {
+                    name: "url", value: infoSong.url
+                });
+            
+            interaction.channel?.send({
+                embeds: [ message ]
+            });
+        }
+
         // masukan infoSong ke dalam list query
         queue.push(infoSong);
-
-        // tampilkan informasi antrian
-        const message = new EmbedBuilder()
-            .setAuthor({
-                name: "Tambah antrian musik",
-                iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
-            })
-            .setDescription(`${infoSong.name}`)
-            .setColor("Random")
-            .addFields({
-                name: "durasi", value: infoSong.duration, inline: true
-            }, {
-                name: "requested by", value: infoSong.requested, inline: true
-            }, {
-                name: "positioned", value: `${queue.length.toString()} in the queue`, inline: true
-            }, {
-                name: "url", value: infoSong.url
-            });
-        
-        interaction.channel?.send({
-            embeds: [ message ]
-        });
 
         // jika musik belum dijalankan maka putar musik
         if (!isPlaying) await playAudio(config, queue[0], interaction);
