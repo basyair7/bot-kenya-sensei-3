@@ -8,7 +8,7 @@ import {
     VoiceConnectionStatus,
 } from '@discordjs/voice'
 import { command } from '../../../utils'
-import { queue, loopState } from './constants'
+import { queue, loopState, numQueue } from './constants'
 
 const meta = new SlashCommandBuilder()
     .setName("skip")
@@ -62,6 +62,7 @@ export default command(
                 if (loopState[0] === true) {
                     queue.push(queue[0]);
                     queue.shift();
+                    numQueue.shift();
                     connection.destroy();
                 } else {
                     queue.shift();

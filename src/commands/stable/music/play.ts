@@ -23,8 +23,8 @@ import { command } from "../../../utils";
 import { queue, numQueue, loopState } from "./constants";
 
 // buat state dan infoSong jika musik sedang dimainkan
-let isPlaying = false;
-var infoSong;
+let isPlaying: boolean = false;
+var infoSong: any;
 
 // buat fungsi antrian musik
 async function addToQueue(config: any, query: any, interaction: any) 
@@ -84,18 +84,7 @@ async function StopMusic(interaction: any, connection: any) {
     // cek jika antrian sudah habis maka bot berhenti memutarkan musik
     try {
         if(queue.length === 0) {
-            // Disconnect bot dari voice channel
             isPlaying = false;
-            /*
-            const message = new EmbedBuilder()
-                .setAuthor({
-                    name: "Memutar musik",
-                    iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
-                })
-                .setDescription("Musik telah berhenti! :white_check_mark:");
-                
-            return interaction.channel?.send({ embeds: [ message ] });
-            */
         }
     }
     // tampilkan pesan diconsole jika terjadi error pada program
