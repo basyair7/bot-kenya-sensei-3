@@ -15,7 +15,7 @@
         "purge-deploy": "cross-env IS_SCRIPT=true ts-node src/scripts/purge"
     },
     "keywords": [],
-    "author": "",
+    "author": "basyair7",
     "license": "ISC",
     "devDependencies": {
         "@discordjs/voice": "^0.16.0",
