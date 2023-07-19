@@ -23,8 +23,15 @@ import { command } from "../../../utils";
 import { queue, numQueue, loopState } from "./constants";
 
 // buat state dan infoSong jika musik sedang dimainkan
+interface InfoSong {
+    name: string,
+    thumbnail: string,
+    requested: any,
+    duration: string,
+    image: string,
+    url: string
+};
 let isPlaying: boolean = false;
-var infoSong: any;
 
 // buat fungsi antrian musik
 async function addToQueue(config: any, query: any, interaction: any) 
@@ -32,7 +39,7 @@ async function addToQueue(config: any, query: any, interaction: any)
     try {
         // ambil data antrian
         const data = query;
-        infoSong = {
+        var infoSong: InfoSong = {
             name: data.title,
             thumbnail: data.image,
             requested: interaction.user.tag,
@@ -94,7 +101,7 @@ async function StopMusic(interaction: any, connection: any) {
 }
 
 // buat fungsi playAudio
-async function playAudio(config: any, data: any, interaction: any)
+async function playAudio(config: any, data: InfoSong, interaction: any)
 {
     isPlaying = true;
     try{

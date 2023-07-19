@@ -24,7 +24,16 @@ import { command } from "../../../utils";
 import { queue, numQueue, loopState } from "./constants";
 import { send } from "process";
 let isPlaying = false;
-var song;
+interface Song {
+    name: string,
+    thumbnail: string,
+    requested: any,
+    duration: string,
+    image: string,
+    url: string,
+    source: string
+};
+var song: Song;
 
 async function addToQueue(config: any, query: any, interaction: any, source: string) {
     // proses memasukan data lagu antrian
@@ -154,7 +163,7 @@ async function StopMusic(interaction: any, connection: any){
     }
 }
 
-async function playAudio(config: any, data: any, interaction: any) {
+async function playAudio(config: any, data: Song, interaction: any) {
     isPlaying = true;
     try {
         // buat object joinVoiceChannel
