@@ -15,6 +15,7 @@ import queue from './music/queue';
 import loop from './music/loop';
 import lyrics from './music/lyrics';
 import nowplay from './music/nowplay';
+import remove from './music/remove';
 
 export default category('Debug', [
   ping, stats, mukaku,
@@ -22,5 +23,5 @@ export default category('Debug', [
   help, join, left,
   play, stop, skip, 
   queue, loop, lyrics, 
-  nowplay
+  nowplay, remove
 ])

@@ -39,11 +39,11 @@ export default command(meta, ({ interaction, client }) => {
             embeds: [ message ]
         });
     } else {
-        const title = queue[0]["name"];
-        const duration = queue[0]["duration"];
-        const thumbnail = queue[0]["image"];
-        const URLYt = queue[0]["url"];
-        const user = queue[0]["requested"];
+        const title: string = queue[0]["name"];
+        const duration: string = queue[0]["duration"];
+        const thumbnail: any = queue[0]["image"];
+        const URLYt: string = queue[0]["url"];
+        const user: string = queue[0]["requested"];
 
         const message = new EmbedBuilder()
             .setAuthor({

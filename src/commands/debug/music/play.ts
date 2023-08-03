@@ -21,7 +21,7 @@ import { command } from "../../../utils";
 
 
 // antrian untuk lagu
-import { queue, numQueue, loopState } from "./constants";
+import { queue, numQueue, loopState, playState } from "./constants";
 import { send } from "process";
 let isPlaying = false;
 interface Song {
@@ -187,6 +187,7 @@ async function playAudio(config: any, data: Song, interaction: any) {
         const user = data["requested"];
         const source = data["source"];
         numQueue.push(queue.length.toString());
+        playState.push();
 
         const message = new EmbedBuilder()
             .setAuthor({
