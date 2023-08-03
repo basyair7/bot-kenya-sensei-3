@@ -19,7 +19,7 @@ export default command(meta,
             left\`\` => leave the voice channel you are in,
             google\`\`=> mesin pencarian google (ks.google halo)`;
 
-        let listMusicCmd = `play\`\` => play <song Name or url>\`\` => play songs from youtube server,
+        let listMusicCmd = `play <song Name or url>\`\` => play songs from youtube server,
             stop\`\` => stops the song and clears the queue
             queue\`\` => shows the song queue of the server,
             skip\`\` => skips to next song in the queue
@@ -56,6 +56,8 @@ export default command(meta,
             .addFields({
                 name: 'Music', value: revisedMusic,
             })
+            
+            /*
             .addFields({
                 name: 'Commands 1', value: cmd1, inline: true
 
@@ -70,7 +72,7 @@ export default command(meta,
             }, {
                 name: 'Commands 6', value: cmd6, inline: true
             });
-            
+            */
         return interaction.reply({
             ephemeral: true,
             embeds: [ messageHelp ]
