@@ -6,7 +6,7 @@ import { command } from '../../utils';
 
 const meta = new SlashCommandBuilder()
     .setName('help')
-    .setDescription('Show List Menu Bot')
+    .setDescription('Show List Menu Bot');
 
 export default command(meta, 
     async ({ interaction, client }) => {
@@ -15,14 +15,18 @@ export default command(meta,
             servericon\`\` => menampilkan gambar icon server, 
             mukaku (ks.mukaku atau ks.mukaku @tag)\`\` => menampilkan gambar avatar member,
             stats\`\`=> status bot, 
-            uptime\`\`=> waktu start bot, 
-            clear\`\`=> membersihkan pesan channel, 
-            sendch (ks.sendch info) \`\` => perintah bot mengirimkan ulang pesan ke channel lain,
-            afk (ks.afk reason)\`\`=> perintah mengaktifkan afk, 
-            nonafk\`\`=> menonaktifkan afk,
-            restart\`\`=> restart ulang bot,
-            google\`\`=> mesin pencarian google (ks.google halo)
-            snipe\`\` => menampilkan pesan member yang dihapus`;
+            join\`\` => join the voice channel you are in,
+            left\`\` => leave the voice channel you are in,
+            google\`\`=> mesin pencarian google (ks.google halo)`;
+
+        let listMusicCmd = `play\`\ => play <song Name or url>\`\` => play songs from youtube server,
+            stop\`\` => stops the song and clears the queue
+            queue\`\` => shows the song queue of the server,
+            skip\`\` => skips to next song in the queue
+            lyrics\`\` => get lyrics of current song,
+            loop\`\` => enable (true) or disable (false) loop for currently playing song,
+            remove <Target number>\`\` => remove a song from the queue,
+            nowplay\`\` => see now playing song`;
 
         let cmd1 = '`indonesia`, `ping`, `bajul`, `hmm/hm`, `iya buk`, `yaa buk`, `y`, `iya buk`, `ya buk`, `iyaa buk`';
         let cmd2 = '`gak mau buk`, `engga mau buk`, `ga mau buk`, `gak mau`, `halo`, `hallo`, `alo`, `hello`, `helo`';
@@ -35,6 +39,11 @@ export default command(meta,
             .split("\n")
             .map((x) => "• " + "``" + "/" + x.trim())
             .join("\n");
+        
+        let revisedMusic = listMusicCmd
+            .split("\n")
+            .map((x) => "• " + "``" + "/" + x.trim())
+            .join("\n");
 
         const messageHelp = new EmbedBuilder()
             .setTitle("Kenya-sensei Commands Help")
@@ -43,6 +52,9 @@ export default command(meta,
             .setTimestamp()
             .addFields({
                 name: 'Core', value: revisedCore,
+            })
+            .addFields({
+                name: 'Music', value: revisedMusic,
             })
             .addFields({
                 name: 'Commands 1', value: cmd1, inline: true
@@ -57,13 +69,11 @@ export default command(meta,
                 name: 'Commands 5', value: cmd5, inline: true
             }, {
                 name: 'Commands 6', value: cmd6, inline: true
-            })
+            });
             
         return interaction.reply({
             ephemeral: true,
-            embeds: [
-                messageHelp
-            ]
-        })
+            embeds: [ messageHelp ]
+        });
     }
 )
