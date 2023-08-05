@@ -51,21 +51,21 @@ async function addToQueue(config: any, query: any, interaction: any)
         if(queue.length !== 0) {
             // tampilkan informasi antrian
             const message = new EmbedBuilder()
-                .setAuthor({
-                    name: "Tambah antrian musik",
-                    iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
-                })
-                .setDescription(`${infoSong.name}`)
-                .setColor("Random")
-                .addFields({
-                    name: "durasi", value: infoSong.duration, inline: true
-                }, {
-                    name: "requested by", value: infoSong.requested, inline: true
-                }, {
-                    name: "positioned", value: `${(queue.length+1).toString()} in the queue`, inline: true
-                }, {
-                    name: "url", value: infoSong.url
-                });
+            .setAuthor({
+                name: "Tambah antrian musik",
+                iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
+            })
+            .setDescription(`${infoSong.name}`)
+            .setColor("Random")
+            .addFields({
+                name: "durasi", value: infoSong.duration, inline: true
+            }, {
+                name: "requested by", value: infoSong.requested, inline: true
+            }, {
+                name: "positioned", value: `${(queue.length+1).toString()} in the queue`, inline: true
+            }, {
+                name: "url", value: infoSong.url
+            });
             
             interaction.channel?.send({
                 embeds: [ message ]
@@ -92,6 +92,13 @@ async function StopMusic(interaction: any, connection: any) {
     try {
         if(queue.length === 0) {
             isPlaying = false;
+            const message = new EmbedBuilder()
+            .setDescription("Musik telah berhenti! :white_check_mark:")
+            .setColor("Random");
+
+            return interaction.channel?.send({
+                embeds: [ message ]
+            });
         }
     }
     // tampilkan pesan diconsole jika terjadi error pada program
@@ -129,22 +136,22 @@ async function playAudio(config: any, data: InfoSong, interaction: any)
         
         // tampilkan informasi lagu yang sedang diputar
         const message = new EmbedBuilder()
-            .setAuthor({
-                name: "Memutar musik",
-                iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
-            })
-            .setDescription(`${title}`)
-            .setFields({
-                name: "Durasi", value: duration, inline: true
-            }, {
-                name: "Request", value: user,
-            }, {
-                name: "Positioned", value: `${numQueue.length.toString()} in the queue`
-            }, {
-                name: "URL", value: URL
-            })
-            .setImage(thumbnail)
-            .setColor("Random")
+        .setAuthor({
+            name: "Memutar musik",
+            iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
+        })
+        .setDescription(`${title}`)
+        .setFields({
+            name: "Durasi", value: duration, inline: true
+        }, {
+            name: "Request", value: user,
+        }, {
+            name: "Positioned", value: `${numQueue.length.toString()} in the queue`
+        }, {
+            name: "URL", value: URL
+        })
+        .setImage(thumbnail)
+        .setColor("Random");
         
         interaction.channel?.send({
             embeds: [ message ]
@@ -233,8 +240,8 @@ export default command(meta, async({ interaction, client }) => {
         // jika member melakukan query tapi tidak ada di voice channel
         if (!channelId) {
             const message = new EmbedBuilder()
-                .setDescription("Kamu harus join voice channel dulu nak! :negative_squared_cross_mark:")
-                .setColor("Red");
+            .setDescription("Kamu harus join voice channel dulu nak! :negative_squared_cross_mark:")
+            .setColor("Red");
             return interaction.reply({
                 ephemeral: true,
                 embeds: [ message ]
@@ -263,8 +270,8 @@ export default command(meta, async({ interaction, client }) => {
         const res = searchResult[0];
         if(!res) {
             const msgError = new EmbedBuilder()
-                .setDescription(`Tidak ditemukan lagu ${ytquery}`)
-                .setColor("Red");
+            .setDescription(`Tidak ditemukan lagu ${ytquery}`)
+            .setColor("Red");
             
             return await interaction.editReply({
                 embeds: [ msgError ]

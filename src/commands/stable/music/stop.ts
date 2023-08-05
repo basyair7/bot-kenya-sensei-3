@@ -23,8 +23,8 @@ export default command(meta, ({interaction, client}) => {
     const channelId = member?.voice.channelId;
     if (!channelId){
         const msg = new EmbedBuilder()
-            .setDescription("Kamu harus join voice channel dulu nak!")
-            .setColor("Red");
+        .setDescription("Kamu harus join voice channel dulu nak!")
+        .setColor("Red");
         return interaction.reply({
             ephemeral: true,
             embeds: [ msg ]
@@ -33,8 +33,8 @@ export default command(meta, ({interaction, client}) => {
     const voiceConnection = getVoiceConnection(guildId!);
     if (!voiceConnection) {
         const msg = new EmbedBuilder()
-            .setDescription("Sensei-bot tidak ada di dalam voice channel ini! :negative_squared_cross_mark:")
-            .setColor("Red");
+        .setDescription("Sensei-bot tidak ada di dalam voice channel ini! :negative_squared_cross_mark:")
+        .setColor("Red");
 
         return interaction.reply({
             ephemeral: true,
@@ -43,8 +43,8 @@ export default command(meta, ({interaction, client}) => {
     }
     if (queue.length === 0){
         const message = new EmbedBuilder()
-            .setDescription("Tidak ada musik yang sendang dimainkan... :negative_squared_cross_mark:")
-            .setColor("Yellow");
+        .setDescription("Tidak ada musik yang sendang dimainkan... :negative_squared_cross_mark:")
+        .setColor("Yellow");
 
         return interaction.reply({
             ephemeral: true,
@@ -56,12 +56,5 @@ export default command(meta, ({interaction, client}) => {
         queue.splice(0, queue.length);
         numQueue.splice(0, numQueue.length);
         voiceConnection.destroy();
-        const message = new EmbedBuilder()
-            .setDescription("Musik telah berhenti! :white_check_mark:")
-            .setColor("Random");
-
-        return interaction.reply({
-            embeds: [ message ]
-        });
     }
 })

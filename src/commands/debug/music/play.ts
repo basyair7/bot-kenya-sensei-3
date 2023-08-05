@@ -142,21 +142,13 @@ async function StopMusic(interaction: any, connection: any){
             // Disconnect dari channel
             isPlaying = false;
 
-            /*
-            const msg = new EmbedBuilder()
-                .setAuthor({
-                    name: "Memutar musik",
-                    iconURL: "https://img.icons8.com/color/2x/cd--v3.gif"
-                })
-                .setDescription("Musik telah berhenti! :white_check_mark:");
-            */
-                
-            // connection.disconnect();
-            // connection.destroy();
-            
-            // return interaction.editReply({
-            //     embeds: [ msg ]
-            // });
+            const message = new EmbedBuilder()
+            .setDescription("Musik telah berhenti! :white_check_mark:")
+            .setColor("Random");
+
+            return interaction.channel?.send({
+                embeds: [ message ]
+            });
         }
     } catch(e) {
         console.error(`Something went error in StopMusic :( ${e}`);

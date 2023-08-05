@@ -48,7 +48,7 @@ export default command(meta, async ({ interaction, client }) => {
                 embeds: [ msg ]
             });
         }
-        if(numDelete > queue.length) {
+        if(numDelete > queue.length || numDelete === 0) {
             const msg: object = new EmbedBuilder()
                 .setDescription(
                     `:x: **The queue doesn't have that much songs**`

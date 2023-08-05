@@ -57,12 +57,5 @@ export default command(meta, ({interaction, client}) => {
         numQueue.splice(0, numQueue.length);
         // voiceConnection.disconnect();
         voiceConnection.destroy();
-        const message = new EmbedBuilder()
-            .setDescription("Musik telah berhenti! :white_check_mark:")
-            .setColor("Random");
-
-        return interaction.reply({
-            embeds: [ message ]
-        });
     }
 })

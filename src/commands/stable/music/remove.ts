@@ -27,8 +27,8 @@ export default command(meta, async ({ interaction, client }) => {
         // jika member melakukan query tapi tidak ada di voice channel
         if (!channelId) {
             const message = new EmbedBuilder()
-                .setDescription("Kamu harus join voice channel dulu nak! :negative_squared_cross_mark:")
-                .setColor("Red");
+            .setDescription("Kamu harus join voice channel dulu nak! :negative_squared_cross_mark:")
+            .setColor("Red");
             return interaction.reply({
                 ephemeral: true,
                 embeds: [ message ]
@@ -37,36 +37,36 @@ export default command(meta, async ({ interaction, client }) => {
 
         const numDelete: number = interaction.options.getInteger("queue_number") as number;
         if(queue.length == 1) {
-            const msg: object = new EmbedBuilder()
-                .setDescription(
-                    `:x: **Can't remove when only one song is playing, Use command stop**`
-                )
-                .setTimestamp()
-                .setColor("Blue");
+            const msg = new EmbedBuilder()
+            .setDescription(
+                `:x: **Can't remove when only one song is playing, Use command stop**`
+            )
+            .setTimestamp()
+            .setColor("Blue");
             return interaction.reply({
                 ephemeral: true,
                 embeds: [ msg ]
             });
         }
-        if(numDelete > queue.length) {
-            const msg: object = new EmbedBuilder()
-                .setDescription(
-                    `:x: **The queue doesn't have that much songs**`
-                )
-                .setTimestamp()
-                .setColor("Blue");
+        if(numDelete > queue.length || numDelete === 0) {
+            const msg = new EmbedBuilder()
+            .setDescription(
+                `:x: **The queue doesn't have that much songs**`
+            )
+            .setTimestamp()
+            .setColor("Blue");
             return interaction.reply({
                 ephemeral: true,
                 embeds: [ msg ]
             });
         }
         if(queue.length === 0) {
-            const msg: object = new EmbedBuilder()
-                .setDescription(
-                    `:x: **There are no songs playing in this server**`
-                )
-                .setTimestamp()
-                .setColor("Blue");
+            const msg = new EmbedBuilder()
+            .setDescription(
+                `:x: **There are no songs playing in this server**`
+            )
+            .setTimestamp()
+            .setColor("Blue");
             return interaction.reply({
                 ephemeral: true,
                 embeds: [ msg ]
@@ -76,12 +76,12 @@ export default command(meta, async ({ interaction, client }) => {
         const title: string = await queue[numDelete-1]["name"];
         queue.splice(numDelete - 1);
 
-        const msg: object = new EmbedBuilder()
-            .setDescription(
-                `**Removed ${title} from queue :white_check_mark: **`
-            )
-            .setTimestamp()
-            .setColor("Blue");
+        const msg = new EmbedBuilder()
+        .setDescription(
+            `**Removed ${title} from queue :white_check_mark: **`
+        )
+        .setTimestamp()
+        .setColor("Blue");
 
         return interaction.reply({
             fetchReply: true,
