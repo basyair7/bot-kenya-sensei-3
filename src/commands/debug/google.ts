@@ -6,6 +6,7 @@ import {
   ButtonStyle,
 } from 'discord.js';
 import { command } from '../../utils';
+import { idUser, idGuild, idMember } from './constants';
 import superagent from 'superagent';
 
 const meta = new SlashCommandBuilder()
@@ -21,44 +22,49 @@ const meta = new SlashCommandBuilder()
   });
 
 export default command(meta, async({ interaction, client }) => {
-  var query = interaction.options.getString('query');
-  if (!query) return interaction.reply({
-      ephemeral: true,
-      content: "No Query, Please Insert Your Search",
-      fetchReply: true
-  });
+    // ambil data user (id user, id member, id guild, id channel)
+    const users = client.guilds.cache.get(interaction.guild?.id!);
+    const member = users?.members.cache.get(interaction.user.id);
+    idMember.push(member);
 
-  let result = await superagent
-      .get("https://customsearch.googleapis.com/customsearch/v1")
-      .query({
-          q: query,
-          cx: "fabc838188055482f",
-          key: "AIzaSyBzYYTqN_X90RKqQfJtXbr43m8sVn3UcvM",
-      });
+    var query = interaction.options.getString('query');
+    if (!query) return interaction.reply({
+        ephemeral: true,
+        content: "No Query, Please Insert Your Search",
+        fetchReply: true
+    });
 
-  if (!result.body.items) return interaction.reply({
-      ephemeral: true,
-      content: `Yang kamu cari ${query} tidak di temukan nak`,
-  });
+    let result = await superagent
+        .get("https://customsearch.googleapis.com/customsearch/v1")
+        .query({
+            q: query,
+            cx: "fabc838188055482f",
+            key: "AIzaSyBzYYTqN_X90RKqQfJtXbr43m8sVn3UcvM",
+        });
 
-  let res = result.body.items[0];
-  var message = new EmbedBuilder()
-      .setColor(0x7289)
-      .setTitle(res.title)
-      .setDescription(res.snippet)
-      .setURL(res.link)
-      .setImage(res.pagemap.cse_image[0].src || res.pagemap.cse_thumbnail[0].src);
+    if (!result.body.items) return interaction.reply({
+        ephemeral: true,
+        content: `Yang kamu cari ${query} tidak di temukan nak`,
+    });
 
-  const buttonDelete = new ActionRowBuilder<ButtonBuilder>()
-      .setComponents(
-          new ButtonBuilder()
-              .setCustomId("delete")
-              .setLabel("Delete")
-              .setStyle(ButtonStyle.Danger)
-      );
+    let res = result.body.items[0];
+    var message = new EmbedBuilder()
+        .setColor(0x7289)
+        .setTitle(res.title)
+        .setDescription(res.snippet)
+        .setURL(res.link)
+        .setImage(res.pagemap.cse_image[0].src || res.pagemap.cse_thumbnail[0].src);
 
-  return interaction.reply({
-      embeds: [message],
-      components: [buttonDelete]
-  })
+    const buttonDelete = new ActionRowBuilder<ButtonBuilder>()
+        .setComponents(
+            new ButtonBuilder()
+                .setCustomId("delete")
+                .setLabel("Delete")
+                .setStyle(ButtonStyle.Danger)
+        );
+
+    return interaction.reply({
+        embeds: [message],
+        components: [buttonDelete]
+    })
 })
