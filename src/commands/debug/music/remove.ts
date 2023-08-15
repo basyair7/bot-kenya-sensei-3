@@ -36,7 +36,7 @@ export default command(meta, async ({ interaction, client }) => {
         }
 
         const numDelete: number = interaction.options.getInteger("queue_number") as number;
-        if(queue.length == 1) {
+        if(queue.length === 1) {
             const msg: object = new EmbedBuilder()
                 .setDescription(
                     `:x: **Can't remove when only one song is playing, Use command stop**`
