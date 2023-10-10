@@ -44,6 +44,14 @@ export default event('interactionCreate', async (
             )
         }
     }
+    /*
+    if (interaction.isButton())
+    {
+        if(interaction.customId === 'delete'){
+            return await interaction.message.delete();
+        }
+    }
+    */
     if (interaction.isButton())
     {
         if(interaction.customId === 'delete'){
